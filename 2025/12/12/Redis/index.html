@@ -1,0 +1,820 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author" content="Yin JianLi,2401265@stu.neu.edu.cn"><title>Redis学习 · Hide On Bush Blog YJL</title><meta name="description" content="Redis 是基于内存的
+支持 5 种基本类型：String、List、集合、SortedSet、Hash
+支持 5 种高级类型：Stream、地理空间、位图、HyperLogLog、 位域
+默认端口号 6379
+RedisInsightRedis 官方 GUI 工具
+基本数据类型Redis 都是键"><meta name="keywords" content="生活,Java,机器学习,AI,实习,"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/blog_basic.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"></head><body><div class="sidebar animated fadeInDown"><div class="logo-title"><div class="title"><img src="/images/logo@2x.png" style="width:127px;"><h3 title=""><a href="/">Hide On Bush Blog YJL</a></h3><div class="description"><p>记录个人生活、Java、机器学习、AI项目、实习和其他学习笔记。</p></div></div></div><ul class="social-links"><li><a target="_blank" rel="noopener" href="http://weibo.com/dreamlovei"><i class="fa fa-weibo"></i></a></li><li><a target="_blank" rel="noopener" href="http://github.com/https://github.com/jianli0306"><i class="fa fa-github"></i></a></li></ul><div class="footer"><a target="_blank" href="/"><span>Theme by </span></a><a target="_blank" rel="noopener" href="https://www.caicai.me"> CaiCai </a><span>&</span><a target="_blank" rel="noopener" href="https://github.com/Ben02/hexo-theme-Anatole"> Ben</a><div class="by_farbox"><a href="https://hexo.io/zh-cn/" target="_blank">Proudly published with Hexo&#65281;</a></div></div></div><div class="main"><div class="page-top animated fadeInDown"><div class="nav"><li><a href="/">Home</a></li><li><a href="/about">Sobre</a></li><li><a href="/archives">Arquivo</a></li><li><a href="/links">Links</a></li></div><div class="information"><div class="back_btn"><li><a class="fa fa-chevron-left" onclick="window.history.go(-1)"> </a></li></div><div class="avatar"><img src="/images/favicon.png"></div></div></div><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post animated fadeInDown"><div class="post-title"><h3><a>Redis学习</a></h3></div><div class="post-content"><p>Redis 是基于内存的</p>
+<p>支持 5 种基本类型：String、List、集合、SortedSet、Hash</p>
+<p>支持 5 种高级类型：Stream、地理空间、位图、HyperLogLog、 位域</p>
+<p>默认端口号 6379</p>
+<h3 id="RedisInsight"><a href="#RedisInsight" class="headerlink" title="RedisInsight"></a>RedisInsight</h3><p>Redis 官方 GUI 工具</p>
+<h3 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h3><p>Redis 都是键值对，且区分大小写</p>
+<p>默认使用字符串来存储数据，且是二进制安全的</p>
+<p>SET</p>
+<p>GET</p>
+<p>DEL</p>
+<p>EXISTS</p>
+<p>KEYS *</p>
+<p>KEYS *me	查找以 me 结尾的键</p>
+<p>FLUSHALL 删除所有键</p>
+<p>quit	退出</p>
+<p>redis-cli	以命令行接口运行</p>
+<p>redis-cli –raw 原始格式以命令行接口运行（可以中文）</p>
+<p>TTL key 查看键 key 的过期时间</p>
+<ul>
+<li>-1 表示没有设置过期时间</li>
+<li>-2 表示已经过期</li>
+</ul>
+<p>EXPIRE key seconds 为键 key 设置过期时间 seconds 秒</p>
+<p>SETEX key seconds value  添加一个 key value，过期时间是 seconds</p>
+<p>SETNX key value  当键不存在时，创建 key value。否则不做任何动作</p>
+<h3 id="列表-L-简单列表最新文章之类的-LPUSH、RPUSH、"><a href="#列表-L-简单列表最新文章之类的-LPUSH、RPUSH、" class="headerlink" title="列表(L) 简单列表最新文章之类的 LPUSH、RPUSH、"></a>列表(L) 简单列表最新文章之类的 LPUSH、RPUSH、</h3><p>LPUSH key value1[value2…] 左侧添加元素到 key 列表中</p>
+<p>LRANGE key start stop 按照左边开始顺序，返回 key[start 到 stop] 之间的元素</p>
+<p>LPOP key 删除最左侧一个元素</p>
+<p>LPOP key count  删除左侧count 个元素 </p>
+<p>LLEN key 查看 key 列表的长度</p>
+<p>LTRIM key start stop 删除 key 列表中 start-stop 之外的元素（只保留 start-stop）</p>
+<p>按照插入顺序存放</p>
+<h3 id="set-SADD-注意-S-开头-场景：交并差：共同关注、好友也在看、推荐，因为有-SPOP-随机弹出和-SRANDMEMBER-随机选择，所以可以抽奖"><a href="#set-SADD-注意-S-开头-场景：交并差：共同关注、好友也在看、推荐，因为有-SPOP-随机弹出和-SRANDMEMBER-随机选择，所以可以抽奖" class="headerlink" title="set  SADD 注意 S 开头 场景：交并差：共同关注、好友也在看、推荐，因为有 SPOP 随机弹出和 SRANDMEMBER 随机选择，所以可以抽奖"></a>set  SADD 注意 S 开头 场景：交并差：共同关注、好友也在看、推荐，因为有 SPOP 随机弹出和 SRANDMEMBER 随机选择，所以可以抽奖</h3><p>无序（不按照插入顺序）、不可重复列表 </p>
+<p>SADD key member 插入 member 到 key</p>
+<p>SMEMBERS key  查看 key 中的所有成员（元素）</p>
+<p>SISMEMBER key member  判断是否在集合中</p>
+<p>SREM key member 删除 key 中的 member 成员</p>
+<p><strong>集合运算</strong></p>
+<ul>
+<li>SINTER</li>
+<li>SUNION</li>
+<li>SDIFF</li>
+</ul>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728633954293-f49ea192-ef0e-4d72-a385-a7c799c767fe.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728633961209-6718af5b-9064-4536-8b52-da326eb162cb.png">、</p>
+<p><strong>SUNIONSTORE destination set1 set2</strong></p>
+<h3 id="ZSet-ZADD-key-score1-member1-…-排行榜"><a href="#ZSet-ZADD-key-score1-member1-…-排行榜" class="headerlink" title="ZSet  ZADD key score1 member1 …   排行榜"></a>ZSet  ZADD key score1 member1 …   排行榜</h3><p>每个元素都会关联一个浮点类型的分数，按照分数从小到大排序</p>
+<p>元素不可重复，但分数可能相同</p>
+<p>ZADD key score1 member1 score2 member2  分数在前成员在后，空格隔开</p>
+<p>ZRANGE key start stop [WITHSCORES] 查看 key 中 start 到 stop [ 可以选择查看分数 ]</p>
+<p>ZSCORE key member 查看 member 的分数</p>
+<p>ZRANK key member 看 member 的排名</p>
+<p>ZREVRANK key member 查看 member 反向排名</p>
+<p>ZREM key member 删除 member</p>
+<h3 id="Hash-用来存储键值对-HSET-注意-H-开头-，HGET，存一些对象形式的"><a href="#Hash-用来存储键值对-HSET-注意-H-开头-，HGET，存一些对象形式的" class="headerlink" title="Hash  用来存储键值对 (HSET)  注意 H 开头 ，HGET，存一些对象形式的"></a>Hash  用来存储键值对 (HSET)  注意 H 开头 ，HGET，存一些对象形式的</h3><p>一般用来存储对象</p>
+<p>HSET key key1 value1</p>
+<p>HSET key key2 value2</p>
+<p>如<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728634438249-3a221248-641d-411a-b85c-519eeb41a483.png"></p>
+<p>HGET key key1</p>
+<p>HGETALL key 查看该 key 的所有键值对</p>
+<p>HDEL key key1 </p>
+<p>HEXISTS key key1</p>
+<p>HKEYS key 来获取所有该 key 的所有键值</p>
+<p>HLEN key </p>
+<h3 id="发布订阅消息"><a href="#发布订阅消息" class="headerlink" title="发布订阅消息"></a>发布订阅消息</h3><p>两个不同的线程 </p>
+<p>SUBSCRIBE channel 订阅 channel 频道</p>
+<p>PUBLISH channel message 向 channel 发布一个消息</p>
+<p><font style="color:rgb(51, 51, 51);">它有个缺点就是消息无法持久化，如果出现网络断开、Redis 宕机等，消息就会被丢弃 </font></p>
+<h3 id="消息队列-Stream（X）"><a href="#消息队列-Stream（X）" class="headerlink" title="消息队列 Stream（X）"></a>消息队列 Stream（X）</h3><p>轻量级的消息队列。<font style="color:rgb(51, 51, 51);">提供了消息的持久化和主备复制功能，可以让任何客户端访问任何时刻的数据，并且能记住每一个客户端的访问位置，还能保证消息不丢失</font></p>
+<ol>
+<li><code>XADD key ID field value [field value ...] </code></li>
+</ol>
+<ul>
+<li><strong><font style="color:rgb(51, 51, 51);">key</font></strong><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">：队列名称，如果不存在就创建</font></li>
+<li><strong><font style="color:rgb(51, 51, 51);">ID</font></strong><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">：消息 id，我们使用 * 表示由 redis 生成，可以自定义，但是要自己保证递增性。</font></li>
+<li><strong><font style="color:rgb(51, 51, 51);">field value</font></strong><font style="color:rgb(51, 51, 51);"> ： 记录。针对这个 ID 的所有 field 和 value 对</font></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">redis&gt; XADD mystream * name Sara surname OConnor</span><br><span class="line">&quot;1601372323627-0&quot;</span><br><span class="line">redis&gt; XADD mystream * field1 value1 field2 value2 field3 value3</span><br><span class="line">&quot;1601372323627-1&quot;</span><br><span class="line">redis&gt; XLEN mystream</span><br><span class="line">(integer) 2</span><br><span class="line">redis&gt; XRANGE mystream - +</span><br><span class="line">1) 1) &quot;1601372323627-0&quot;</span><br><span class="line">   2) 1) &quot;name&quot;</span><br><span class="line">      2) &quot;Sara&quot;</span><br><span class="line">      3) &quot;surname&quot;</span><br><span class="line">      4) &quot;OConnor&quot;</span><br><span class="line">2) 1) &quot;1601372323627-1&quot;</span><br><span class="line">   2) 1) &quot;field1&quot;</span><br><span class="line">      2) &quot;value1&quot;</span><br><span class="line">      3) &quot;field2&quot;</span><br><span class="line">      4) &quot;value2&quot;</span><br><span class="line">      5) &quot;field3&quot;</span><br><span class="line">      6) &quot;value3&quot;</span><br><span class="line">redis&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><code>XTRIM key MAXLEN [~] count  </code><font style="color:rgb(51, 51, 51);">使用 XTRIM 对流进行修剪，限制长度()</font></li>
+<li><code>&lt;font style=&quot;color:rgb(51, 51, 51);&quot;&gt;XDEL key ID [ID ...] &lt;/font&gt;</code><font style="color:rgb(51, 51, 51);">删除指定 ID 的</font></li>
+<li><code>&lt;font style=&quot;color:rgb(51, 51, 51);&quot;&gt;XRANGE key start end [COUNT count]&lt;/font&gt;</code><font style="color:rgb(51, 51, 51);"> 获取消息列表</font></li>
+<li><code>&lt;font style=&quot;color:rgb(51, 51, 51);&quot;&gt;XREAD [COUNT count] [BLOCK milliseconds] STREAMS key [key ...] id [id ...]&lt;/font&gt;</code></li>
+</ol>
+<ul>
+<li><strong><font style="color:rgb(51, 51, 51);">count</font></strong><font style="color:rgb(51, 51, 51);"> ：读取数量</font></li>
+<li><strong><font style="color:rgb(51, 51, 51);">milliseconds</font></strong><font style="color:rgb(51, 51, 51);"> ：可选，阻塞毫秒数（如果没有消息则会阻塞 1s 在读取），没有设置就是非阻塞模式</font></li>
+<li><strong><font style="color:rgb(51, 51, 51);">key</font></strong><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">：队列名</font></li>
+<li><strong><font style="color:rgb(51, 51, 51);">id</font></strong><font style="color:rgb(51, 51, 51);"> ：消息 ID，0 表示从头开始读。$符表示从当前命令启动后开始</font></li>
+</ul>
+<p><code>XGROUP [CREATE key groupname id-or-$] [SETID key groupname id-or-$] [DESTROY key groupname] [DELCONSUMER key groupname consumername]</code> 创建消费者组</p>
+<ul>
+<li><font style="color:rgb(51, 51, 51);">从头开始消费:</font></li>
+</ul>
+<p><code>XGROUP CREATE mystream consumer-group-name 0-0  </code></p>
+<ol start="6">
+<li>XGROUP CREATECONSUMER key group consumer</li>
+</ol>
+<ul>
+<li>创建组里的消费者</li>
+<li>key 消息名</li>
+<li>group 代表组名，即要在这个组里创建消费者</li>
+<li>consumer 消费者名</li>
+</ul>
+<ol start="7">
+<li><code>XREADGROUP GROUP group consumer [COUNT count] [BLOCK milliseconds] [NOACK] STREAMS key [key ...] ID [ID ...]</code></li>
+</ol>
+<ul>
+<li><strong><font style="color:rgb(51, 51, 51);">group</font></strong><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">：消费组名</font></li>
+<li><strong><font style="color:rgb(51, 51, 51);">consumer</font></strong><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">：消费者名。</font></li>
+<li><strong><font style="color:rgb(51, 51, 51);">count</font></strong><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">： 读取数量。</font></li>
+<li><strong><font style="color:rgb(51, 51, 51);">milliseconds</font></strong><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">： 阻塞毫秒数。</font></li>
+<li><strong><font style="color:rgb(51, 51, 51);">key</font></strong><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">： 队列名。</font></li>
+<li><strong><font style="color:rgb(51, 51, 51);">ID</font></strong><font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">： 消息 ID。</font></li>
+<li><code>XREADGROUP GROUP consumer-group-name consumer-name COUNT 1 BLOCK 1000 STREAMS mystream &gt;</code><ul>
+<li><blockquote>
+<p>表示从消息中读取最新消息</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="HyperLogLog-去重统计（PFADD-key-element1-element2，PFCOUNT-key1-key2、PFMERGE-destination-P1-P2）12k-的空间就能存储接近2-64个不同元素，根据阈值选择是否用-12k，标准误差-0-81-，应用：统计大数-：IP-数、UV、"><a href="#HyperLogLog-去重统计（PFADD-key-element1-element2，PFCOUNT-key1-key2、PFMERGE-destination-P1-P2）12k-的空间就能存储接近2-64个不同元素，根据阈值选择是否用-12k，标准误差-0-81-，应用：统计大数-：IP-数、UV、" class="headerlink" title="HyperLogLog 去重统计（PFADD key element1 element2，PFCOUNT key1 key2、PFMERGE destination P1 P2）12k 的空间就能存储接近&lt;font style=&quot;color:rgb(60, 60, 67);&quot;&gt;2^64&lt;/font&gt;个不同元素，根据阈值选择是否用 12k，标准误差 0.81%，应用：统计大数 ：IP 数、UV、"></a>HyperLogLog <font style="color:#DF2A3F;">去重统计</font>（PFADD key element1 element2，PFCOUNT key1 key2、PFMERGE destination P1 P2）<font style="color:rgb(60, 60, 67);">12k 的空间就能存储接近</font><code>&lt;font style=&quot;color:rgb(60, 60, 67);&quot;&gt;2^64&lt;/font&gt;</code><font style="color:rgb(60, 60, 67);">个不同元素，根据阈值选择是否用 12k，标准误差 0.81%，应用：统计大数 ：IP 数、UV、</font></h3><ul>
+<li><strong><font style="color:rgb(60, 60, 67);">稀疏矩阵</font></strong><font style="color:rgb(60, 60, 67);">：计数较少的时候，占用空间很小。</font></li>
+<li><strong><font style="color:rgb(60, 60, 67);">稠密矩阵</font></strong><font style="color:rgb(60, 60, 67);">：计数达到某个阈值的时候，占用 12k 的空间</font></li>
+</ul>
+<p>统计基数</p>
+<p>PFADD key 元素值 1 元素值 2 元素值 3…</p>
+<p>PFCOUNT key 查看 key 的基数</p>
+<p>PFMERGE destkey sourcekey [sourcekey …] <font style="color:rgb(51, 51, 51);">将多个 HyperLogLog 合并为一个 HyperLogLog</font></p>
+<p><font style="color:rgb(51, 51, 51);">在输入元素的数量或者体积非常非常大时，</font><strong><font style="color:rgb(51, 51, 51);">计算基数所需的空间总是固定 的、并且是很小的</font></strong><font style="color:rgb(51, 51, 51);">。</font></p>
+<p><font style="color:rgb(51, 51, 51);">在 Redis 里面，每个 HyperLogLog 键只需要花费 12 KB 内存，就可以计算接近 2^64 个不同元素的基 数。这和计算基数时，元素越多耗费内存就越多的集合形成鲜明对比。</font></p>
+<p><font style="color:rgb(51, 51, 51);">但是，因为 HyperLogLog </font><strong><font style="color:rgb(51, 51, 51);">只会根据输入元素来计算基数，而不会储存输入元素本身</font></strong><font style="color:rgb(51, 51, 51);">，所以 HyperLogLog 不能像集合那样，返回输入的各个元素。</font></p>
+<h3 id="位图-SETBIT-key-offset-value-设置-0-1-、BITCOUNT-key-start-end-统计快、位运算-场景：记录-01-状态的，比如用户签到信息、用户是否活跃、用户是否点赞某个视频"><a href="#位图-SETBIT-key-offset-value-设置-0-1-、BITCOUNT-key-start-end-统计快、位运算-场景：记录-01-状态的，比如用户签到信息、用户是否活跃、用户是否点赞某个视频" class="headerlink" title="位图  SETBIT key offset value 设置 0&#x2F;1 、BITCOUNT key [start end] 统计快、位运算  场景：记录 01 状态的，比如用户签到信息、用户是否活跃、用户是否点赞某个视频"></a>位图  SETBIT key offset value 设置 0&#x2F;1 、BITCOUNT key [start end] 统计快、位运算  场景：记录 01 状态的，比如用户签到信息、用户是否活跃、用户是否点赞某个视频</h3><p>位图实际上是 String 类型的扩展</p>
+<p>每一位记录 0 或 1</p>
+<ol>
+<li><code>SETBIT key offset value</code> 设置位图 key 的偏移值为 value</li>
+</ol>
+<ul>
+<li><code>SETBIT dianzan 0 1</code></li>
+<li><code>SETBIT dianzan 1 0</code></li>
+<li>这样就设置了一个长度为二的位图</li>
+<li><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728646187501-e48c7838-856b-4208-a814-ea02bdd0e0a8.png"></li>
+</ul>
+<ol start="2">
+<li><code>GETBIT key offset</code> 获取位图中某偏移量的值</li>
+</ol>
+<p>因为实际是 String 类型扩展，内部是 String。Redis 基本类型是 String，所以我们可以用基本类型，例子：</p>
+<ul>
+<li>SET dianzan “\xF0”</li>
+<li>GETBIT dianzan 0 （到 3 都是 1，从 4 到 7 都是 0）</li>
+</ul>
+<ol start="3">
+<li><code>BITCOUNT key</code> 统计 key 中 1 的个数</li>
+<li><code>BITPOS key bit</code>统计 key 中第一个出现 bit 的位置</li>
+</ol>
+<h3 id="GEO-GEOADD-key-longtitude1-latitude1-member1-…、GEOPOS-key-mem1、GEODIST-key-mem1-mem2-M-KM、GEORADIUS-key-longtitude-latitude-radius-distance、GEORADIUSBYMEMBER-key-member-radius-distance，附近的人，底层是-ZSET（通过-GEOHASH-将经纬度转为-score）"><a href="#GEO-GEOADD-key-longtitude1-latitude1-member1-…、GEOPOS-key-mem1、GEODIST-key-mem1-mem2-M-KM、GEORADIUS-key-longtitude-latitude-radius-distance、GEORADIUSBYMEMBER-key-member-radius-distance，附近的人，底层是-ZSET（通过-GEOHASH-将经纬度转为-score）" class="headerlink" title="GEO GEOADD key longtitude1 latitude1 member1 …、GEOPOS key mem1、GEODIST key mem1 mem2 M&#x2F;KM、GEORADIUS key longtitude latitude radius distance、GEORADIUSBYMEMBER key member radius distance，附近的人，底层是 ZSET（通过 GEOHASH 将经纬度转为 score）"></a>GEO GEOADD key longtitude1 latitude1 member1 …、GEOPOS key mem1、GEODIST key mem1 mem2 M&#x2F;KM、GEORADIUS key longtitude latitude radius distance、GEORADIUSBYMEMBER key member radius distance，附近的人，底层是 ZSET（通过 GEOHASH 将经纬度转为 score）</h3><h3 id="位域"><a href="#位域" class="headerlink" title="位域"></a>位域</h3><p>位域可以将很多小的整数存储到一个较大的位图，高效地使用内存</p>
+<p><code>BITFIELD key [GET type offset] [SET type offset value] [INCRBY type offset increment] [OVERFLOW WRAP|SAT|FAIL]</code></p>
+<ul>
+<li>key：要操作的位图的键名。</li>
+<li>GET type offset：从位图中获取指定偏移量处的位的值。<ul>
+<li>GET player:1  查看 player:1 整个位域</li>
+<li>BITFIELD player:1 u8 #0 查看 player:1 位域的首个位置 类型是 u8 8 位无符号数</li>
+</ul>
+</li>
+<li>SET type offset value：设置位图中指定偏移量处的位的值。<ul>
+<li>BITFIELD player:1 set u8 #0 1</li>
+<li>type：u8  8 位无符号数</li>
+<li>#0 表示第一个位置 偏移为 0</li>
+<li>BITFIELD player:1 set u32 #1 100</li>
+</ul>
+</li>
+<li>INCRBY type offset increment：对位图中指定偏移量处的位进行增加或减少操作。<ul>
+<li>BITFIELD player:1 INCRBY u32 #1 100</li>
+</ul>
+</li>
+<li>OVERFLOW WRAP|SAT|FAIL：指定位域命令的溢出行为，可以选择包装（WRAP）、饱和（SAT）或失败（FAIL）</li>
+</ul>
+<h3 id="自增-id"><a href="#自增-id" class="headerlink" title="自增 id"></a>自增 id</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Long increment = stringRedisTemplate.opsForValue().increment(&quot;icr:&quot; + keyPrefix + &quot;:&quot; + date);</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Redis-事务"><a href="#Redis-事务" class="headerlink" title="Redis 事务"></a>Redis 事务</h3><p><font style="color:rgb(51, 51, 51);">Redis 事务可以一次执行多个命令， 并且带有以下三个重要的保证：</font></p>
+<ul>
+<li><font style="color:rgb(51, 51, 51);">批量操作在发送 EXEC 命令前被放入队列缓存。</font></li>
+<li><font style="color:rgb(51, 51, 51);">收到 EXEC 命令后进入事务执行，事务中任意命令执行失败，其余的命令依然被执行。</font><ul>
+<li><font style="color:rgb(51, 51, 51);">注意与 MySQL 事务的区别</font></li>
+</ul>
+</li>
+<li><font style="color:rgb(51, 51, 51);">在事务执行过程，其他客户端提交的命令请求不会插入到事务执行命令序列中。</font></li>
+</ul>
+<p><font style="color:rgb(51, 51, 51);">一个事务从开始到执行会经历以下三个阶段：</font></p>
+<ul>
+<li><font style="color:rgb(51, 51, 51);">开始事务。</font></li>
+<li><font style="color:rgb(51, 51, 51);">命令入队。</font></li>
+<li><font style="color:rgb(51, 51, 51);">执行事务。</font></li>
+</ul>
+<p>MULTI 开启事务 ，这条命令后的所有都是事务里的</p>
+<p>EXEC 执行事务</p>
+<p>DISCARD 取消事务</p>
+<h3 id="Redis-持久化、AOF-持久化不同的持久化方式：appendfsync-always-everysec-no（write（主线程）-但不-fsycn（后台线程-always-或者每秒或者不做交给-os））、为什么执行完命令才记录（优点和风险）、AOF-重写（子进程）、AOF-校验机制（Redis-启动时对-AOF-文件-CRC-校验和）、两者的选择、主从复制过程中的-RDB"><a href="#Redis-持久化、AOF-持久化不同的持久化方式：appendfsync-always-everysec-no（write（主线程）-但不-fsycn（后台线程-always-或者每秒或者不做交给-os））、为什么执行完命令才记录（优点和风险）、AOF-重写（子进程）、AOF-校验机制（Redis-启动时对-AOF-文件-CRC-校验和）、两者的选择、主从复制过程中的-RDB" class="headerlink" title="Redis 持久化、AOF 持久化不同的持久化方式：appendfsync always\everysec\no（write（主线程） 但不 fsycn（后台线程 always 或者每秒或者不做交给 os））、为什么执行完命令才记录（优点和风险）、AOF 重写（子进程）、AOF 校验机制（Redis 启动时对 AOF 文件 CRC 校验和）、两者的选择、主从复制过程中的 RDB"></a>Redis 持久化、AOF 持久化不同的持久化方式：appendfsync always\everysec\no（write（主线程） 但不 fsycn（后台线程 always 或者每秒或者不做交给 os））、为什么执行完命令才记录（优点和风险）、AOF 重写（子进程）、AOF 校验机制（Redis 启动时对 AOF 文件 CRC 校验和）、两者的选择、主从复制过程中的 RDB</h3><p>两种实现方式：</p>
+<ul>
+<li>RDB（Redis Database）<ul>
+<li>指定时间间隔内，将内存中的**<font style="color:#DF2A3F;">数据</font>**快照写入磁盘</li>
+<li>配置文件中的 save 参数<ul>
+<li><code>save &lt;seconds&gt; &lt;changes&gt;</code></li>
+<li><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728700238733-c9c2c0f1-7e26-4a4e-8519-0239791899d5.png"></li>
+<li>3600 秒存在修改一次就保存快照一次</li>
+<li>手动 <code>save</code> 命令，就可以立即触发快照，阻塞式 save</li>
+<li>手动<code>bgsave</code>命令，会在后台新建（fork） 一个线程<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728700762936-3a82c4e7-7193-4212-80f2-c014d490c605.png"></li>
+<li>但是 fork 也是需要耗费主进程的时间和资源，这段时间 redis 还是不能处理请求</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>AOF（Append Only File）<ul>
+<li>每次写命令不仅仅执行，还会将**<font style="color:#DF2A3F;">命令</font>**写入到一个追加的文件（即 AOF）中</li>
+<li>该文件中会以日志的形式记录每一个操作</li>
+<li>每次 Redis 重启的时候就会通过重新执行 AOF 文件中的命令，从而在内存中重建整个数据库的内容</li>
+<li>开启方式：将 appendonly 的值改为 yes</li>
+<li><strong><font style="color:#DF2A3F;">不会阻塞当前的命令执行</font></strong></li>
+</ul>
+</li>
+</ul>
+<p><strong>AOF 重写：</strong></p>
+<p> AOF 文件重写期间，Redis 还会维护一个 AOF 重写缓冲区，该缓冲区会在子进程创建新 AOF 文件期间，记录服务器执行的所有写命令。当子进程完成创建新 AOF 文件的工作之后，服务器会将重写缓冲区中的所有内容追加到新 AOF 文件的末尾，使得新的 AOF 文件保存的数据库状态与现有的数据库状态一致。最后，服务器用新的 AOF 文件替换旧的 AOF 文件，以此来完成 AOF 文件重写操作。</p>
+<p>在子进程执行期间，如果有新写入命令，那么就需要预留空间，。Linux 的 fork 系统调用基于 Copy On Write 机制, 如果在此期间 Redis 有大量的写操作, 父子进程就需要各自维护一份内存。因此部署 Redis 的机器往往需要预留一半的内存</p>
+<p><strong>4.0 版本后有混合持久化：</strong><font style="color:rgb(60, 60, 67);">把混合持久化打开，AOF 重写的时候就直接把 RDB 的内容写到 AOF 文件开头。</font></p>
+<p><font style="color:rgb(60, 60, 67);"></font></p>
+<p><strong><font style="color:rgb(60, 60, 67);">两者比较：</font></strong></p>
+<p><strong><font style="color:rgb(60, 60, 67);">RDB 存储经过压缩的二进制数据，而 AOF 存储命令，所以前者小。后者文件过大时会执行子进程 AOF 重写，由于重写期间的写命令会同时写缓冲区和 AOF，所以写过多时需要大量内存且写入磁盘两次。</font></strong></p>
+<p><strong><font style="color:rgb(60, 60, 67);">RDB 存数据肯定比 AOF 存命令再执行要快得多。</font></strong></p>
+<p><strong><font style="color:rgb(60, 60, 67);">RDB 的实时性不如 AOF，AOF 可以设置秒级数据丢失，而 RDB 需要耗费 CPU和内存资源来生成快照（即使 bgsave 使用子进程写 RDB）。因此安全性和风险不如 AOF</font></strong></p>
+<p><strong><font style="color:rgb(60, 60, 67);">RDB 可读性差因为有压缩</font></strong></p>
+<p><strong><font style="color:rgb(60, 60, 67);">AOF 可以看到命令日志，而不仅仅是数据本身</font></strong></p>
+<p><strong><font style="color:rgb(60, 60, 67);"></font></strong></p>
+<p><strong><font style="color:rgb(60, 60, 67);">主从复制时的 RDB：</font></strong></p>
+<p><strong>2.8 版本前的 SYNC 方案</strong></p>
+<p>注意 RDB 是**<font style="color:#DF2A3F;">数据快照</font><strong>，收到 sync 请求后，先传最新的数据快照，然后从节点解析更新数据，在此期间的主节点的</strong><font style="color:#DF2A3F;">新命令</font>**则会被放入从节点缓冲区，然后发送过去。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/49293173/1741593533765-c2f68efe-b509-42f9-b03d-0d9dd653d2ac.png"><img src="https://cdn.nlark.com/yuque/0/2025/png/49293173/1741593541236-f1552733-f0db-4453-b96a-37cf1db9b294.png"></p>
+<p>主节点会为每一个在同步的从节点开辟一块 replication buffer 来记录 RDB 生成后的那些新的写<strong>命令</strong>。</p>
+<p>问题：从节点加载 RDB 时无法提供读服务，主从断开链接，从节点需要全量同步，也就是从节点没有用自己的东西</p>
+<p><strong>2.8 版本：解决了全量同步问题（注意是小问题断开连接后重连，而不是从节点宕机，没数据了肯定要全量同步）</strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/49293173/1741593834058-80b45643-d25a-46a6-a4f7-bf4d518acc74.png">使用了复制进度偏移量思想，每个从节点保持自己同步的主节点的 runid 和自己的偏移量，主节点也会记录自己，当需要同步时（如果第一次同步则是全量同步），先给主节点发送自己持有的主节点的 runid 以及自己当前的复制进度偏移值 offset。</p>
+<p>主节点通过一个环形的复制积压缓冲区记录从生成 RDB 文件到现在开始的所有写命令，一个 master 只有一个复制集呀缓冲区，他的所有从节点都用这一个</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/49293173/1741595003603-d96130d7-3d0d-4665-8db0-19d851e45630.png"></p>
+<p>主节点收到 runid 先和自己对比，如果是的话证明是自己的从节点，之后看从节点缺少的那部分数据是不是在这个队列 ，如果在则通过这个缓冲区按照 offset 进行增量同步，否则全量同步</p>
+<p>问题：如果 slave 宕机或者重启，runid 和 offset 自然没了，master 宕机则新选的 master 的 runid 和 offset 会和原本的不一样。</p>
+<p><strong>redis4.0 版本：即使主从切换，也不需要全量同步</strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/49293173/1741596323218-7f5d8155-1e20-46b7-b129-747fa1e6a5be.png"></p>
+<p>简单来说，就是不唯一 runid 了</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/49293173/1741596489883-824e91a8-8356-4e69-adad-484eb849fee4.png"><img src="https://cdn.nlark.com/yuque/0/2025/png/49293173/1741596602940-fc4506e7-af4b-4859-9200-fe19e8a22149.png"><img src="https://cdn.nlark.com/yuque/0/2025/png/49293173/1741596620531-05e8a81b-cbfe-46a3-ac65-fb2e92733031.png"></p>
+<h3 id="主从复制，补充见前面持久化和后面面试补充"><a href="#主从复制，补充见前面持久化和后面面试补充" class="headerlink" title="主从复制，补充见前面持久化和后面面试补充"></a>主从复制，补充见前面持久化和后面面试补充</h3><p>将一台 redis 服务器（主节点，master）的数据复制到其它 redis 服务器（从节点，slave）中</p>
+<p>每个从节点只能有一个主节点</p>
+<p>复制是单向的，只能主到从</p>
+<p>一般主节点负责写操作，读节点需要读操作</p>
+<p>主节点会将自己的数据变化通过异步方式发送个从节点，从节点按照数据变化更新自己的数据</p>
+<p>从节点的配置文件中（每一个 redis 节点都是一个实例，都有对应自己的配置文件），指定主节点地址和端口：</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728701893779-f8c26b48-a99b-4add-8891-569b2b59d269.png"></p>
+<p>之后连接从节点，从节点的数据和主节点的数据总能保持一致</p>
+<h3 id="哨兵模式-主从模式下的自动化故障转移问题的解决，但是其实默认读写不分离，从节点只备份"><a href="#哨兵模式-主从模式下的自动化故障转移问题的解决，但是其实默认读写不分离，从节点只备份" class="headerlink" title="哨兵模式-主从模式下的自动化故障转移问题的解决，但是其实默认读写不分离，从节点只备份"></a>哨兵模式-主从模式下的自动化故障转移问题的解决，但是其实默认读写不分离，从节点只备份</h3><p>上述主从复制方式，当主节点宕机时，还需要<strong>手动</strong>将一台从节点提升为主节点</p>
+<p>哨兵模式可以实现自动的故障转移</p>
+<p>哨兵以一个<strong>独立进程</strong>运行在 Redis 集群中，用来监控集群中的各个节点是否正常</p>
+<ul>
+<li>监控：不断发送命令用来检查 Redis 节点正常</li>
+<li>通知：若发现某节点存在问题，哨兵就会使用订阅发布命令来通知其他节点</li>
+<li>自动故障转移：当主节点不能正常工作时，哨兵会将一个从节点升级为新的主节点，将其他从节点指向新的主节点</li>
+<li>由于哨兵也是一个进程，因此生产环境中一般配置三个哨兵来保证高可用性。ODown 之后，三个哨兵会通过选举的方式选出领导者（Raft 算法），由领导者进行故障转移。如果领导者挂了，其他哨兵节点会重新选举一个领导者<ul>
+<li>Raft 算法：先到先得， 在一轮选举中，哨兵 A 向 B 发送成为领导者的申请，如果 B 没同意过其它的，则会同意 A</li>
+<li>故障转移（failover）-新 Master 选举算法<ul>
+<li>在剩余 slave 节点健康前提下，priority 高（数字越小越高）者优先，否则 replication offset 大者优先，否则 RunID 小者优先。</li>
+<li>领导者哨兵 Sentinel leader 会对选举出的新 master 执行 slaveof no one，将其提升为 master</li>
+<li>领导者哨兵 Sentinel leader 会对剩余的 slave 执行 slaveof 新 master，将其成为新 master 的 slave</li>
+<li>领导者哨兵 Sentinel leader 会对原来的 master 降级，使之成为新 master的 slave</li>
+<li>整个过程均有 sentinel leader 独自完成，无需人工干预</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="配置步骤："><a href="#配置步骤：" class="headerlink" title="配置步骤："></a>配置步骤：</h4><ol>
+<li>新建 sentinel.conf 文件</li>
+</ol>
+<p><code>sentinel monitor master 127.0.0.1 6379 1</code></p>
+<pre><code>1. master 是自定义的主节点名字
+2. 后面 1 代表只要有一个哨兵节点同意就可以进行故障转移
+3. **也就是说哨兵只需要监控带了从节点的主节点即可！！**
+</code></pre>
+<ol start="2">
+<li>启动哨兵节点：</li>
+</ol>
+<p><code>redis-sentinel sentinel.conf</code></p>
+<h4 id="测试："><a href="#测试：" class="headerlink" title="测试："></a>测试：</h4><p>当主节点（6379，带有两个从节点 6380、6381）关闭（模拟宕机）时，哨兵节点会自动故障转移，找主节点的从节点，将其提升为主节点：</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728703387151-b2466d25-bf7c-411b-8fd0-64756d108592.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728703405140-2d987f13-d9cb-4d9b-8877-af1c84b4f623.png"></p>
+<p>并且可以看到，6381 已经有了一个从节点（6380）</p>
+<h4 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h4><ol>
+<li><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728787499887-350acb03-2618-478f-9d7b-c085a7672050.png"></li>
+<li>可以一个哨兵监控多个，只需要在配置文件中加就行<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728787579379-277bb470-78a4-40a6-978e-94214c0b1f51.png"></li>
+<li><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728790225423-1e9cd2ad-0848-4e18-b7c8-165bc4422bcd.png"></li>
+</ol>
+<h4 id="面试总结"><a href="#面试总结" class="headerlink" title="面试总结"></a>面试总结</h4><p><strong>ODOWN 和 SDOWN？</strong></p>
+<p><strong>Sentinel 是怎么感知其它节点的？slave 主观下线了 sentinel 会干嘛？</strong></p>
+<p>每秒向其它集群中的其它主从以及 sentinel 发送 ping，如果对应节点超时未有效回复，则认为 SDOWN。</p>
+<p><strong>选择 Leader？</strong></p>
+<p><strong>选择新 master 的策略？slave 优先级、复制进度、runId</strong></p>
+<p><strong>脑裂？如何防止？</strong></p>
+<p><font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">脑裂指的是在Redis主从复制中，由于网络分区等原因，哨兵集群误判主节点故障，导致同时存在两个主节点，从而引发数据不一致的问题。比如当主节点与哨兵及从节点之间的网络断开，但主节点本身仍在运行，哨兵可能会选举新的主节点，而客户端可能还在向旧的主节点写入数据，这就导致数据分裂</font></p>
+<p><font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">1. 首先至少要多数派认为故障才 ODOWN 就是一种解决方法</font></p>
+<p><font style="color:rgba(0, 0, 0, 0.6);background-color:rgb(252, 252, 252);">2. 主节点配置拒绝写入两种情况：</font><img src="https://cdn.nlark.com/yuque/0/2025/png/49293173/1741605314737-f01851c1-ca21-4051-bd4f-2d8b2573e275.png"></p>
+<p>3.哨兵故障转移延迟几秒防止网络波动带来的脑裂</p>
+<h3 id="集群-最初的核心目标之一正是为了解决-Redis-单机存储容量限制问题。通过分片机制（Sharding）将数据分散到多个节点，突破单机内存瓶颈，实现存储能力的水平扩展，支持动态扩容和缩容，基于-Gossip-协议通信，去中心化的。内置主从复制（但是不再推荐读写分离了）、自动化故障转移，并加入数据切片和支持水平扩展：使用-hash-槽解耦数据与节点的关系"><a href="#集群-最初的核心目标之一正是为了解决-Redis-单机存储容量限制问题。通过分片机制（Sharding）将数据分散到多个节点，突破单机内存瓶颈，实现存储能力的水平扩展，支持动态扩容和缩容，基于-Gossip-协议通信，去中心化的。内置主从复制（但是不再推荐读写分离了）、自动化故障转移，并加入数据切片和支持水平扩展：使用-hash-槽解耦数据与节点的关系" class="headerlink" title="集群-最初的核心目标之一正是为了解决 Redis 单机存储容量限制问题。通过分片机制（Sharding）将数据分散到多个节点，突破单机内存瓶颈，实现存储能力的水平扩展，支持动态扩容和缩容，基于 Gossip 协议通信，去中心化的。内置主从复制（但是不再推荐读写分离了）、自动化故障转移，并加入数据切片和支持水平扩展：使用 hash 槽解耦数据与节点的关系"></a>集群-<font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">最初的核心目标之一正是为了解决 Redis 单机存储容量限制问题。通过分片机制（Sharding）将数据分散到多个节点，突破单机内存瓶颈，实现存储能力的水平扩展，支持动态扩容和缩容，基于 Gossip 协议通信，去中心化的。</font><font style="color:#DF2A3F;">内置主从复制（但是不再推荐读写分离了）、自动化故障转移，并加入数据切片和支持水平扩展：使用 hash 槽解耦数据与节点的关系</font></h3><p>由于数据量过大，单个 Master 复制集难以承担</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/49293173/1741607216147-d6cf82b9-f56f-4b40-a957-3ca16a0c50d0.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/49293173/1741607763453-92932f04-6f80-4fa0-b6c9-112e4041d05d.png"></p>
+<p>因此需要对多个主节点进行集群，形成水平扩展每个主节点及其从节点只负责存储整个数据集的一部分（解决写压力）。即提供在多个 Redis 节点间共享的程序集。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728796507099-159b12ea-0927-489f-9d10-8b3a0ef704c7.png"></p>
+<ul>
+<li><strong>每个集群可以支持多个 Master，每个 Master 又可以挂载多个 Slave</strong><ul>
+<li><strong><font style="color:#DF2A3F;">读写分离，slave 默认读</font></strong></li>
+<li>支持数据高可用</li>
+<li>支持海量数据的读写存储操作</li>
+</ul>
+</li>
+<li><strong>集群自带哨兵的故障转移机制，无需再使用手动哨兵功能，Redis Cluster 负责</strong></li>
+<li><strong>槽位 slot 负责分配到各个物理服务节点，由对应的集群来负责维护节点、插槽和数据之间的关系。</strong><strong><font style="color:#DF2A3F;">因此 Redis 中的任何一个 master 故障，其它 master 也不会受影响，因为 key 找哈希槽（crc16(key)%槽总数（默认 16384））而不是具体的节点，只需要保证槽对应的节点故障后有 slave 上升为 master 即可</font></strong></li>
+<li><strong><font style="color:#DF2A3F;">扩容和缩容都需要对哈希槽进行重新分配和转移</font></strong></li>
+</ul>
+<h4 id="槽位-slot、Redis-集群的数据分片"><a href="#槽位-slot、Redis-集群的数据分片" class="headerlink" title="槽位 slot、Redis 集群的数据分片"></a>槽位 slot、Redis 集群的数据分片</h4><ul>
+<li>Redis 集群没有使用一致性 hash，而是引入哈希槽</li>
+<li>Redis 集群共有 16384 个哈希槽，每个 key 通过 CRC16 校验后对 16384 取模来决定放置哪个槽。集群的每个节点负责一部分 hash 槽</li>
+<li>假设集群中 3 个节点，那么：<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728797660427-2ec89164-f560-4f08-ad18-fd1789c5cbc5.png"></li>
+<li>使用 Redis 集群时，我们会将存储的数据分散到多台 redis 机器上，即分片。每个 Redis 实例都被认为是整个数据的一个分片</li>
+<li>对给定 key 进行 CRC16（key）算法处理并通过对总分片数量取模。之后使用确定性哈希函数。</li>
+<li>优势：<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728798448733-e45401de-fd14-40c8-a1db-ab0a5bd1a900.png"></li>
+<li>槽位映射：<ul>
+<li>哈希取余分区<ul>
+<li>hash(key)%节点数</li>
+<li>简单直接	</li>
+<li>扩容或者缩容麻烦，节点数一变，计算公式分母一变，映射关系就变了</li>
+</ul>
+</li>
+<li>一致性哈希算法分区<ul>
+<li>解决上面服务器节点个数变化引发的映射关系变化。</li>
+<li>步骤<ol>
+<li>算法构建一致性哈希环 0&#x3D;2^32</li>
+<li>服务器 IP 节点映射 将服务器节点根据 ip 等%2^32 映射到哈希环上</li>
+<li>key 落到服务器的落键规则 <ul>
+<li>当存储一个 kv 键值对时，先计算 key 的 hash 值 hash(key)，即将这个 key 使用相同的 Hash 函数计算出哈希值并确定此数据在环上的位置，<font style="color:#DF2A3F;">从此位置沿环的顺时针行走，遇到的第一台服务器就是该 kv 键值对要存放的服务器节点</font></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>容错性：<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728802268555-9b4e7767-2ac9-4bfc-8b8e-234ae05cdc4e.png"></li>
+<li>扩展性：<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728802290642-61382c6c-5011-4e30-b05f-01e27128b5b5.png"></li>
+<li>缺点：数据倾斜问题 （节点少时最严重）</li>
+</ul>
+</li>
+<li><font style="color:#DF2A3F;">哈希槽分区</font><ul>
+<li>能够均匀的解决公平问题</li>
+<li>在数据和节点之间又加了一层哈希槽（slot），用于管理数据和节点的关系，节点上放槽，槽中放数据<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728802981327-7cb9c8c1-d3b4-49f7-a593-724e2c7589a3.png"></li>
+<li>槽解决的是粒度问题，将粒度变大，便于数据移动。哈希解决的是映射问题，使用 key 的哈希值来计算所在的槽，便于数据分配</li>
+<li>一个集群只能有 16384（0-2^14-1 即 0-16383）个槽，这些槽会分配给集群中的所有主节点</li>
+<li>集群会记录节点和槽的关系，解决了节点和槽的关系后。key 求哈希值后对 16384 取模，然后结果对应落入的槽：<code>HASH_SLOT = CRC16(KEY) MOD 16384</code></li>
+<li><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728803667423-c5524c65-56d5-4df5-b8bc-84a8f15ea64c.png"></li>
+<li>以槽为单位移动数据，槽的数目固定，处理起来比较容易，就不会遭遇移动问题</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="为什么-Redis-最大槽数量为-16384"><a href="#为什么-Redis-最大槽数量为-16384" class="headerlink" title="为什么 Redis 最大槽数量为 16384"></a>为什么 Redis 最大槽数量为 16384</h4><p><del>CRC16 算法产生的 hash 值有 16 位，该算法可以产生 2^16&#x3D;65536 个值（0-65535）</del></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/rjzheng/p/11430592.html">【原创】为什么Redis集群有16384个槽 - 孤独烟 - 博客园 (cnblogs.com)</a></p>
+<p><font style="color:rgb(51, 51, 51);">(1)如果槽位为65536，</font><strong><font style="color:rgb(51, 51, 51);">发送心跳信息的消息头达8k，发送的心跳包过于庞大</font></strong><font style="color:rgb(51, 51, 51);">。</font><br><font style="color:rgb(51, 51, 51);">如上所述，在消息头中，最占空间的是</font><code>&lt;font style=&quot;color:rgb(192, 52, 29);background-color:rgb(251, 229, 225);&quot;&gt;myslots[CLUSTER_SLOTS/8]&lt;/font&gt;</code><font style="color:rgb(51, 51, 51);">。</font><br><font style="color:rgb(51, 51, 51);">当槽位为65536时，这块的大小是:</font><br><code>&lt;font style=&quot;color:rgb(192, 52, 29);background-color:rgb(251, 229, 225);&quot;&gt;65536÷8÷1024=8kb&lt;/font&gt;</code><br><font style="color:rgb(51, 51, 51);">因为每秒钟，redis节点需要发送一定数量的ping消息作为心跳包，如果槽位为65536，这个ping消息的消息头太大了，浪费带宽。</font><br><font style="color:rgb(51, 51, 51);">(2)</font><strong><font style="color:rgb(51, 51, 51);">redis的集群主节点数量基本不可能超过1000个。</font></strong><br><font style="color:rgb(51, 51, 51);">如上所述，集群节点越多，心跳包的消息体内携带的数据越多。如果节点过1000个，也会导致网络拥堵。因此redis作者，不建议redis cluster节点数量超过1000个。</font><br><font style="color:rgb(51, 51, 51);">那么，对于节点数在1000以内的redis cluster集群，16384个槽位够用了。没有必要拓展到65536个。</font><br><font style="color:rgb(51, 51, 51);">(3)</font><strong><font style="color:rgb(51, 51, 51);">槽位越小，节点少的情况下，压缩比高</font></strong><br><font style="color:rgb(51, 51, 51);">Redis主节点的配置信息中，它所负责的哈希槽是通过一张bitmap的形式来保存的，在传输过程中，会对bitmap进行压缩，但是如果bitmap的填充率slots &#x2F; N很高的话(N表示节点数)，bitmap的压缩率就很低。</font><br><font style="color:rgb(51, 51, 51);">如果节点数很少，而哈希槽数量很多的话，bitmap的压缩率就很低。</font></p>
+<p><font style="color:rgb(51, 51, 51);"></font></p>
+<h4 id="不保证强一致性"><a href="#不保证强一致性" class="headerlink" title="不保证强一致性"></a>不保证强一致性</h4><p>Redis 集群不保证强一致性，在特定条件下，会丢掉一些系统收到的写入命令</p>
+<p>比如主机刚宕机，正在故障转移，这时候收到的可能就不能保证一致性</p>
+<h4 id="动态调整、分片实例"><a href="#动态调整、分片实例" class="headerlink" title="动态调整、分片实例"></a>动态调整、分片实例</h4><details class="lake-collapse"><summary id="u8334a808"><span class="ne-text">动态调整、分片实例</span></summary><p id="ub52cb906" class="ne-p"><span class="ne-text">嗯，用户问的是分片的实际例子，以及分片后数据怎么存储和读写。我需要结合Redis集群的情况来举例子，用哈希槽分片的机制来说明。首先，要确定用户可能想了解的具体流程，比如分片的步骤、哈希计算、数据分布到节点、读写过程等。</span></p><p id="u9fc8f0bb" class="ne-p"><span class="ne-text">根据搜索结果，Redis集群使用16384个哈希槽，每个键通过CRC16计算哈希值然后取模得到槽位。例如，用户提到的键user:1000会被分配到某个槽，然后根据槽位映射到对应的节点。需要举一个具体的例子，比如三个节点的集群，每个节点负责一定范围的槽位。</span></p><p id="u1aca0796" class="ne-p"><span class="ne-text">存储过程的话，客户端发送写请求，比如SET user:1000 &quot;Alice&quot;，集群计算槽位，路由到负责该槽的节点，比如节点B。然后节点B存储数据，并同步到从节点。这个过程需要引用相关的搜索结果，比如网页5提到的数据存储和路由机制。</span></p><p id="ud6ce1c90" class="ne-p"><span class="ne-text">读取过程类似，客户端发送GET请求，集群同样计算槽位，找到对应节点，节点返回数据。这里要说明客户端如何维护槽位信息，或者如何处理重定向，比如MOVED或ASK响应，可能引用网页2提到的客户端路由和迁移时的处理。</span></p><p id="u58f8a348" class="ne-p"><span class="ne-text">实际例子中，可能需要详细描述键到槽位的计算，槽位分配到节点的映射，以及扩容时的数据迁移。例如，新增节点D，迁移部分槽位，此时客户端请求可能被重定向到新节点，需要说明迁移过程中的读写如何处理。</span></p><p id="ubec65825" class="ne-p"><span class="ne-text">还要注意分片后的数据分布是否均匀，如何保证高可用性，每个主节点有从节点备份。例如，节点A负责0-5000槽，节点B负责5001-10000，节点C负责10001-16383，每个主节点有一个从节点。这样即使主节点故障，从节点可以接管。</span></p><p id="uf9aded0e" class="ne-p"><span class="ne-text">需要综合多个搜索结果的信息，比如网页1提到的数据分片和复制，网页2中的主从复制和故障转移，网页5的具体存储和读取流程，以及网页3中的分片算法比较。确保引用正确的来源，比如哈希槽分片是Redis Cluster的官方方法，来自网页1和5。</span></p><p id="ua09aa7c0" class="ne-p"><span class="ne-text">可能还需要比较不同的分片策略，但用户要求的是实际例子，所以重点放在哈希槽分片的具体应用。例如，用三个节点分配槽位，说明数据如何分布，以及读写如何路由。同时，数据迁移的例子可以说明动态扩展的过程，引用网页2和4提到的数据迁移步骤和注意事项。</span></p><p id="ufbdcaf86" class="ne-p"><span class="ne-text">最后，总结分片带来的好处，如扩展性和高可用性，以及可能的挑战，如数据迁移的复杂性，引用网页3和4中的优缺点分析。但用户的问题主要是举例说明，所以这部分可以简要提及。</span></p><p id="u0f455830" class="ne-p"><br></p><p id="u2ddbaf6f" class="ne-p"><br></p><p id="u445d1953" class="ne-p"><span class="ne-text">以下是一个基于 </span><strong><span class="ne-text">Redis 集群哈希槽分片</span></strong><span class="ne-text"> 的实际例子，详细说明数据分片后的存储与读写流程：</span></p><hr id="UHt7Y" class="ne-hr"><h3 id="KmoYh"><strong><span class="ne-text">示例场景</span></strong></h3><p id="uc6bc7659" class="ne-p"><span class="ne-text">假设一个电商平台需要存储用户订单数据，订单 ID 为 </span><code class="ne-code"><span class="ne-text">order:1001</span></code><span class="ne-text">、</span><code class="ne-code"><span class="ne-text">order:1002</span></code><span class="ne-text"> 等。Redis 集群由 </span><strong><span class="ne-text">3 个主节点（A、B、C）</span></strong><span class="ne-text"> 组成，每个主节点对应一个从节点（A1、B1、C1），总共有 </span><strong><span class="ne-text">16384 个哈希槽</span></strong><span class="ne-text">，分配如下：<br /></span><span class="ne-text">• </span><strong><span class="ne-text">节点 A</span></strong><span class="ne-text">：负责槽 0~5460</span><span class="ne-text"><br /></span><span class="ne-text">• </span><strong><span class="ne-text">节点 B</span></strong><span class="ne-text">：负责槽 5461~10922</span><span class="ne-text"><br /></span><span class="ne-text">• </span><strong><span class="ne-text">节点 C</span></strong><span class="ne-text">：负责槽 10923~16383  </span></p><hr id="WRGvU" class="ne-hr"><h3 id="pi217"><strong><span class="ne-text">数据存储流程</span></strong></h3><ol class="ne-ol"><li id="udfdc8a9d" data-lake-index-type="0"><strong><span class="ne-text">键的哈希槽计算</span></strong><span class="ne-text"><br /></span><span class="ne-text">当客户端写入 </span><code class="ne-code"><span class="ne-text">SET order:1001 &quot;iPhone 15&quot;</span></code><span class="ne-text"> 时，集群对键 </span><code class="ne-code"><span class="ne-text">order:1001</span></code><span class="ne-text"> 执行 </span><strong><span class="ne-text">CRC16 哈希算法</span></strong><span class="ne-text">，得到一个哈希值，再对 16384 取模，确定其所属的哈希槽。例如：</span></li></ol><pre data-language="plain" id="CHZ58" class="ne-codeblock language-plain"><code>CRC16(&quot;order:1001&quot;) % 16384 = 7321 → 槽 7321</code></pre><ol start="2" class="ne-ol"><li id="u76a170f1" data-lake-index-type="0"><strong><span class="ne-text">路由到目标节点</span></strong><span class="ne-text"><br /></span><span class="ne-text">客户端根据缓存的槽位映射表，发现槽 7321 属于 </span><strong><span class="ne-text">节点 B</span></strong><span class="ne-text">，因此直接将写请求发送给节点 B。</span></li><li id="u6dd880a9" data-lake-index-type="0"><strong><span class="ne-text">数据存储与复制</span></strong><span class="ne-text"><br /></span><span class="ne-text">• 节点 B 将 </span><code class="ne-code"><span class="ne-text">order:1001</span></code><span class="ne-text"> 存入内存，并通过异步复制机制同步到其从节点 B1。<br /></span><span class="ne-text">• 若节点 B 宕机，哨兵机制会自动选举 B1 为新主节点，继续处理槽 7321 的请求。</span></li></ol><hr id="GmsgQ" class="ne-hr"><h3 id="cX7jP"><strong><span class="ne-text">数据读取流程</span></strong></h3><ol class="ne-ol"><li id="u670dd44f" data-lake-index-type="0"><strong><span class="ne-text">键的哈希槽计算</span></strong><span class="ne-text"><br /></span><span class="ne-text">客户端发送 </span><code class="ne-code"><span class="ne-text">GET order:1001</span></code><span class="ne-text">，同样通过 CRC16 计算得到槽 7321，并查询槽位映射表。</span></li><li id="u62f72357" data-lake-index-type="0"><strong><span class="ne-text">请求路由与响应</span></strong><span class="ne-text"><br /></span><span class="ne-text">• 若客户端缓存正确，请求直接发送到节点 B，节点 B 返回数据 </span><code class="ne-code"><span class="ne-text">&quot;iPhone 15&quot;</span></code><span class="ne-text">。<br /></span><span class="ne-text">• 若槽位已迁移（例如扩容新增节点 D），节点 B 返回 </span><code class="ne-code"><span class="ne-text">MOVED 7321 新节点IP:Port</span></code><span class="ne-text">，客户端更新缓存并重定向到新节点。</span></li></ol><hr id="pCEn6" class="ne-hr"><h3 id="hXESx"><strong><span class="ne-text">动态扩容与数据迁移</span></strong></h3><p id="ub50e541b" class="ne-p"><span class="ne-text">假设业务增长，需新增节点 D 分担负载：</span></p><ol class="ne-ol"><li id="u4dfdd0b4" data-lake-index-type="0"><strong><span class="ne-text">槽位重新分配</span></strong><span class="ne-text"><br /></span><span class="ne-text">通过 </span><code class="ne-code"><span class="ne-text">CLUSTER ADDSLOTS</span></code><span class="ne-text"> 将节点 B 的部分槽（如 7321~8000）迁移到节点 D。</span></li><li id="u818ae59b" data-lake-index-type="0"><strong><span class="ne-text">迁移过程</span></strong><span class="ne-text"><br /></span><span class="ne-text">• 节点 B 将槽 7321 内的键（如 </span><code class="ne-code"><span class="ne-text">order:1001</span></code><span class="ne-text">）异步迁移到节点 D，迁移期间对该槽的写操作暂存到 B 的缓冲区。<br /></span><span class="ne-text">• 迁移完成后，客户端请求槽 7321 时，节点 B 返回 </span><code class="ne-code"><span class="ne-text">ASK 7321 节点D</span></code><span class="ne-text">，客户端临时重定向到 D 并更新缓存。</span></li></ol><hr id="qbGDB" class="ne-hr"><h3 id="jdhg2"><strong><span class="ne-text">分片后的数据分布示例</span></strong></h3><p id="u4150ade9" class="ne-p"><strong><span class="ne-text">键</span></strong></p><p id="u96d5ab92" class="ne-p"><strong><span class="ne-text">哈希槽</span></strong></p><p id="u7f3e1df7" class="ne-p"><strong><span class="ne-text">存储节点</span></strong></p><p id="uf33dc405" class="ne-p"><strong><span class="ne-text">从节点</span></strong></p><p id="ua245f51b" class="ne-p"><code class="ne-code"><span class="ne-text">order:1001</span></code></p><p id="u23364d53" class="ne-p"><span class="ne-text">7321</span></p><p id="ue616e213" class="ne-p"><span class="ne-text">B</span></p><p id="u1a471baf" class="ne-p"><span class="ne-text">B1</span></p><p id="ue06388bf" class="ne-p"><code class="ne-code"><span class="ne-text">user:2003</span></code></p><p id="u7956eaf2" class="ne-p"><span class="ne-text">12345</span></p><p id="u09b8c226" class="ne-p"><span class="ne-text">C</span></p><p id="ub5609744" class="ne-p"><span class="ne-text">C1</span></p><p id="u7b5a08df" class="ne-p"><code class="ne-code"><span class="ne-text">product:500</span></code></p><p id="u1694472b" class="ne-p"><span class="ne-text">3000</span></p><p id="ua9e992fb" class="ne-p"><span class="ne-text">A</span></p><p id="u69d1eeca" class="ne-p"><span class="ne-text">A1</span></p><hr id="ilddB" class="ne-hr"><h3 id="JuS5s"><strong><span class="ne-text">分片带来的优势与挑战</span></strong></h3><ol class="ne-ol"><li id="u95d25f53" data-lake-index-type="0"><strong><span class="ne-text">优势</span></strong><span class="ne-text"><br /></span><span class="ne-text">• </span><strong><span class="ne-text">容量扩展</span></strong><span class="ne-text">：新增节点可线性提升存储容量（如从 3 节点扩展至 6 节点）。<br /></span><span class="ne-text">• </span><strong><span class="ne-text">高并发读写</span></strong><span class="ne-text">：各节点并行处理请求，总吞吐量提升至单机的 N 倍。<br /></span><span class="ne-text">• </span><strong><span class="ne-text">故障隔离</span></strong><span class="ne-text">：单节点故障仅影响其负责的槽位，其他数据仍可访问。</span></li><li id="u1f9ba0a3" data-lake-index-type="0"><strong><span class="ne-text">挑战</span></strong><span class="ne-text"><br /></span><span class="ne-text">• </span><strong><span class="ne-text">跨槽事务限制</span></strong><span class="ne-text">：需通过 </span><code class="ne-code"><span class="ne-text">Hash Tag</span></code><span class="ne-text">（如 </span><code class="ne-code"><span class="ne-text">order:&#123;1001&#125;:detail</span></code><span class="ne-text">）强制多键同槽。<br /></span><span class="ne-text">• </span><strong><span class="ne-text">运维复杂度</span></strong><span class="ne-text">：需监控槽位分布、迁移进度和节点负载。</span></li></ol><hr id="BozjO" class="ne-hr"><h3 id="p8wHy"><strong><span class="ne-text">总结</span></strong></h3><p id="ub55e7642" class="ne-p"><span class="ne-text">通过哈希槽分片，Redis 集群实现了数据的均匀分布、动态扩展和高可用性。在实际应用中，分片策略需结合业务场景（如键设计、负载均衡）灵活调整，同时需关注迁移成本和运维复杂度。</span></p></details>
+#### 不再读写分离，因为主节点多了，以前只有一个主节点负责所有数据所以要读写分离，而现在每个主节点负责一部分 hash 槽，所以不再需要读写分离，从节点只负责备份和故障切换
+![](https://cdn.nlark.com/yuque/0/2025/png/49293173/1741615777496-834c24a5-7935-40a4-93de-544e050c51eb.png)
+
+<p>防止异步复制的数据一致性问题，读写分离无法规避脑裂问题</p>
+<p>redis cluster 可以显著降低脑裂，因为原本是由哨兵节点来监控单个主节点和多个从节点，如果分区瘫痪，则整个单节点和从节点全部不能提供服务，而现在是多个主节点之间负责不同的哈希槽，所以即使分区，也是部分影响，其它槽正常。主节点故障是由多数从节点投票选举，因此只有主节点和其从节点完全分成一半一半的时候才会脑裂。而 gossip 协议又可以快速检测出网络分区。</p>
+<h3 id="Redis-实战-VM-虚拟机"><a href="#Redis-实战-VM-虚拟机" class="headerlink" title="Redis 实战-VM 虚拟机"></a>Redis 实战-VM 虚拟机</h3><ol>
+<li>sudo apt install redis</li>
+<li>安装之后在<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728891748480-17b89a81-4857-49c6-a9fd-f6956f4c77d5.png"></li>
+<li>将 redis.conf 移动到 新建目录 myredis 下<code>cp /etc/redis/redis.conf /myredis/redis.conf</code></li>
+<li><strong>修改&#x2F;myredis 目录下的 redis.conf 配置文件做初始化设置 （要 sudo 提升权限，否则为空）</strong><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728893793039-bee91dc9-3c52-4d16-be8d-f28a50693621.png"></li>
+<li>使用这个配置文件启动 redis-server：<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728894664380-b9c352a9-d92a-4742-83a2-f90a503b1970.png"></li>
+</ol>
+<p><strong><font style="color:#DF2A3F;background-color:#FBDE28;">现在由于修改了&#x2F;etc&#x2F;redis&#x2F;redis.conf 所以虚拟机开机时就会启动 redis-server，不用上面的步骤了</font></strong></p>
+<h3 id="集群实战-docker"><a href="#集群实战-docker" class="headerlink" title="集群实战-docker"></a>集群实战-docker</h3><p>【尚硅谷Redis零基础到进阶，最强redis7教程，阳哥亲自带练（附redis面试题）】 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV13R4y1v7sP/?p=86&share_source=copy_web&vd_source=ceb16a3081f552a0e2ae57aa3008b7ce">https://www.bilibili.com/video/BV13R4y1v7sP/?p=86&share_source&#x3D;copy_web&amp;vd_source&#x3D;ceb16a3081f552a0e2ae57aa3008b7ce</a></p>
+<p>注意集群模式下，启动时要加入启动参数-c 路由转发</p>
+<p>当主从切换后，使用 CLUSTER NODES 可以切换回最初配置的主从关系</p>
+<p>注意扩容时的槽位分配，前三个各出一部分给新节点</p>
+<p>注意缩容时的槽位归还</p>
+<h4 id="docker-中实战摸索"><a href="#docker-中实战摸索" class="headerlink" title="docker 中实战摸索"></a>docker 中实战摸索</h4><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/niceyoo/p/14118146.html">基于Docker搭建Redis集群（主从集群） - niceyoo - 博客园 (cnblogs.com)</a></p>
+<ol>
+<li>Docker  pull redis:5.0.5</li>
+<li>创建 6 个 redis 容器</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">docker create --name redis-node1 --net host -v /data/redis-data/node1:/data redis:5.0.5 --cluster-enabled <span class="built_in">yes</span> --cluster-config-file nodes-node-1.conf --port 6379</span><br><span class="line"></span><br><span class="line">docker create --name redis-node2 --net host -v /data/redis-data/node2:/data redis:5.0.5 --cluster-enabled <span class="built_in">yes</span> --cluster-config-file nodes-node-2.conf --port 6380</span><br><span class="line"></span><br><span class="line">docker create --name redis-node3 --net host -v /data/redis-data/node3:/data redis:5.0.5 --cluster-enabled <span class="built_in">yes</span> --cluster-config-file nodes-node-3.conf --port 6381</span><br><span class="line"></span><br><span class="line">docker create --name redis-node4 --net host -v /data/redis-data/node4:/data redis:5.0.5 --cluster-enabled <span class="built_in">yes</span> --cluster-config-file nodes-node-4.conf --port 6382</span><br><span class="line"></span><br><span class="line">docker create --name redis-node5 --net host -v /data/redis-data/node5:/data redis:5.0.5 --cluster-enabled <span class="built_in">yes</span> --cluster-config-file nodes-node-5.conf --port 6383</span><br><span class="line"></span><br><span class="line">docker create --name redis-node6 --net host -v /data/redis-data/node6:/data redis:5.0.5 --cluster-enabled <span class="built_in">yes</span> --cluster-config-file nodes-node-6.conf --port 6384</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这些<code>docker create</code>命令用于创建一个Redis集群，其中包含六个节点。每个命令都创建了一个名为<code>redis-node1</code>到<code>redis-node6</code>的Docker容器，每个容器运行一个Redis实例。下面是每个命令参数的详细解释：</p>
+<pre><code>1. `docker create`：这是Docker命令行工具用来创建一个新的容器的命令。
+2. `--name &lt;name&gt;`：这个选项指定了容器的名称。例如，`--name redis-node1`将容器命名为`redis-node1`。
+3. `--net host`：这个选项将容器的网络设置为host模式，这意味着容器将不会获得自己的IP地址，而是直接使用宿主机的网络栈。这通常用于性能敏感型应用，因为它避免了虚拟网络的开销。
+4. `-v /data/redis-data/node1:/data`：这个选项挂载了一个卷。它将宿主机上的`/data/redis-data/node1`目录挂载到容器内的`/data`目录。这样，容器内的数据可以持久化存储在宿主机上，即使容器被删除，数据也不会丢失。其他节点的命令也类似，只是挂载的目录不同。
+5. `redis:5.0.5`：这指定了要运行的Docker镜像，这里是Redis的官方镜像，版本为5.0.5。
+6. `--cluster-enabled yes`：这个选项启用了Redis的集群模式。在集群模式下，Redis可以自动处理分区和复制。
+7. `--cluster-config-file nodes-node-1.conf`：这个选项指定了集群配置文件的名称。每个节点都会有一个不同的配置文件，例如`nodes-node-2.conf`、`nodes-node-3.conf`等。
+8. `--port 6379`：这个选项设置了Redis服务监听的端口。在这个例子中，`redis-node1`监听6379端口，`redis-node2`监听6380端口，依此类推，直到`redis-node6`监听6384端口。这些端口需要在宿主机上开放，以便客户端可以连接到这些Redis节点。
+</code></pre>
+<p>总结来说，这些命令创建了六个Redis节点，每个节点都配置为集群模式，并监听不同的端口。它们都挂载了宿主机上的不同目录，以便持久化存储数据。这些节点将形成一个Redis集群，可以提供高可用性和数据分片。在实际部署时，你还需要使用<code>redis-cli</code>工具来初始化集群，这通常涉及到设置节点之间的连接和复制关系。</p>
+<p><font style="color:rgb(6, 6, 7);">宿主主机通常指的是你的Windows操作系统本身。当你在Windows上安装并运行Docker，Docker会使用一个虚拟化技术（如Hyper-V）来创建一个虚拟环境，在这个环境中运行容器。这个虚拟环境模拟了一个Linux内核，因为Docker最初是为Linux设计的，所以它需要一个Linux环境来运行容器。</font></p>
+<ol start="3">
+<li>启动 redis 容器<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728877517749-10e52e3f-2b77-442b-b20b-acc008ba06f7.png"></li>
+<li>建立集群<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728882428683-8193991e-1ab7-469b-992f-c50d2ecf5b61.png"></li>
+<li>查看信息<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728882730561-a487d4eb-eed2-42b3-b408-7bdf724bcdb6.png"></li>
+</ol>
+<h3 id="Spring-连接-redis"><a href="#Spring-连接-redis" class="headerlink" title="Spring 连接 redis"></a>Spring 连接 redis</h3><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728886231562-7eb991ce-a6cf-4d97-a6fd-9480d9b96e20.png"></p>
+<p>现在都是 RedisTemplate，在其中内置了 Lettuce</p>
+<ol>
+<li>在 <code>Redis 实战-VM 虚拟机 </code> 中，配置好了 redis 服务器</li>
+</ol>
+<p>然后我们用在 vm 虚拟机中使用<code>ip addr show</code> 查看虚拟机的 ip 地址：<font style="color:rgb(6, 6, 7);">与外部网络通信的那个接口，比如 </font><code>&lt;font style=&quot;color:rgb(6, 6, 7);&quot;&gt;eth0&lt;/font&gt;</code><font style="color:rgb(6, 6, 7);"> 或 </font><code>&lt;font style=&quot;color:rgb(6, 6, 7);&quot;&gt;ens33&lt;/font&gt;</code><font style="color:rgb(6, 6, 7);">（取决于虚拟机的网络配置）</font><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728907857182-7b9eca0c-4d3e-4feb-ae40-8f3f59e9116e.png"></p>
+<ol start="2">
+<li>SpringBoot 项目中导入依赖：</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">&lt;!-- https://mvnrepository.com/artifact/org.apache.commons/commons-pool2 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.commons<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-pool2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.11.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>在 application.properties 中添加 redis 配置：</li>
+</ol>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.data.redis.database</span>=<span class="string">0</span></span><br><span class="line"><span class="attr">spring.data.redis.host</span>=<span class="string">192.168.203.128</span></span><br><span class="line"><span class="attr">spring.data.redis.port</span>=<span class="string">6379</span></span><br><span class="line"><span class="attr">spring.data.redis.timeout</span>=<span class="string">5000</span></span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>编写配置类，用于创建并放入容器：</li>
+</ol>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1729492967244-3db594a8-a848-4f9d-93f2-4e65517c9dda.png"></p>
+<ol start="5">
+<li>建立 SpringBootTest，测试连接：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SpringBootLearnApplicationTests</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RedisTemplate redisTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">        redisTemplate.opsForValue().set(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;whq&quot;</span>);</span><br><span class="line">        log.info(<span class="string">&quot;name:&#123;&#125;&quot;</span>,redisTemplate.opsForValue().get(<span class="string">&quot;name&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>测试结果：</li>
+</ol>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728908095479-eef3cab0-e5c0-40a6-abd6-40f29f9bcb7a.png"></p>
+<p>但是数据库中是乱码：</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728908246959-c8730aa7-d36a-4d09-bef3-6f9e30bdedb1.png"></p>
+<p>解决方法：</p>
+<p>使用原本 RedisTemplate 添加数据时会自动加上东西，StringRedisTemplate 后就变成正常的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> StringRedisTemplate stringRedisTemplate;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728908610492-6ff15f34-2fbd-4087-8d28-5842586c0bcb.png"></p>
+<p>原因：</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728908693875-767e7c15-80c5-497c-af09-862f5586f940.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728908841440-0c8fa29c-bb26-4550-93ee-98f8401f179b.png"></p>
+<p>因此，解决方法二就是配置 RedisConfig 手动配置<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728908890760-05572958-17a2-45fd-8989-f6a667181385.png"></p>
+<p>另外有中文数据时，查看数据库的时候使用–raw</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728908397398-e026431a-547d-4134-a2cf-5bebdbd809bb.png"></p>
+<h3 id="StringRedisTemplate-中需要所有属性值都是-String，但是我们-POJO-类-id-属性是-Long-型，所以需要修改存入时的属性类型（因为不能自动将-Long-转为-String），使用-BeanUtil-工具类对字段值修改："><a href="#StringRedisTemplate-中需要所有属性值都是-String，但是我们-POJO-类-id-属性是-Long-型，所以需要修改存入时的属性类型（因为不能自动将-Long-转为-String），使用-BeanUtil-工具类对字段值修改：" class="headerlink" title="StringRedisTemplate 中需要所有属性值都是 String，但是我们 POJO 类 id 属性是 Long 型，所以需要修改存入时的属性类型（因为不能自动将 Long 转为 String），使用 BeanUtil 工具类对字段值修改："></a>StringRedisTemplate 中需要所有属性值都是 String，但是我们 POJO 类 id 属性是 Long 型，所以需要修改存入时的属性类型（因为不能自动将 Long 转为 String），使用 BeanUtil 工具类对字段值修改：</h3><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1731043534178-7f87ce5e-8851-4346-b181-4d17d82a2bda.png"></p>
+<h3 id="StringRedisTemplate-使用-opsForHash-entries-可以返回完整-Map-对象"><a href="#StringRedisTemplate-使用-opsForHash-entries-可以返回完整-Map-对象" class="headerlink" title="StringRedisTemplate 使用 opsForHash.entries()可以返回完整 Map 对象"></a>StringRedisTemplate 使用 opsForHash.entries()可以返回完整 Map 对象</h3><h3 id="StringRedisTemplate-使用-opsForList-range-key-0-1-返回-List"><a href="#StringRedisTemplate-使用-opsForList-range-key-0-1-返回-List" class="headerlink" title="StringRedisTemplate 使用 opsForList.range(key,0,-1)返回 List"></a>StringRedisTemplate 使用 opsForList.range(key,0,-1)返回 List</h3><h3 id="解决Interceptor的RedisTemplate注入"><a href="#解决Interceptor的RedisTemplate注入" class="headerlink" title="解决Interceptor的RedisTemplate注入"></a><font style="color:rgb(34, 34, 38);">解决Interceptor的RedisTemplate注入</font></h3><p>将 Interceptor 拦截器类使用@Component 交给 Spring 管理，在拦截器类中使用@Autowired自动注入（String）RedisTemplate 对象。最后在@Configuration 标记的配置类中使用@Autowired自动注入拦截器对象。Spring 会确保每个对象被正确注入！</p>
+<p>如果真的想在配置类中 new 拦截器对象，而不是拦截器类使用@Componet、再在配置类中@Autowired 的话，就需要在配置类中使用@Bean注解 返回一个new的拦截器对象，在此处将这个对象交给 Spring 管理。</p>
+<h2 id="高阶"><a href="#高阶" class="headerlink" title="高阶"></a>高阶</h2><h3 id="Redis-单线程，为什么是单线程"><a href="#Redis-单线程，为什么是单线程" class="headerlink" title="Redis 单线程，为什么是单线程"></a>Redis 单线程，为什么是单线程</h3><p>redis4 之后慢慢支持多线程，到 redis6&#x2F;7 稳定<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730352857256-3d89c560-7981-467b-b933-aef6c680e289.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730353051672-e1081bbf-b8c5-431d-9b70-28e074dbc6d0.png"></p>
+<p>读取 socket 就是当客户端 redis-cli 时连接一个客户端</p>
+<p>redis 执行任何命令都是原子操作，单线程的</p>
+<p>单线程的优点：</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730353415202-ac37ee70-2695-4b5c-a841-db6883412661.png"></p>
+<ul>
+<li>数据结构简单就是说都是 kv 键值对</li>
+<li>多路复用和非阻塞 IO，减少线程切换开销、避免 IO 阻塞</li>
+</ul>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730353948181-ebcfdd72-bd67-4aa3-a4b4-40e7cc4fc81b.png"></p>
+<p>为什么当时选择单线程：</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730353979529-34b1adbc-fd82-4dc0-bdf5-eb89e4e88d7f.png"></p>
+<h3 id="Redis-为什么现在逐渐多线程"><a href="#Redis-为什么现在逐渐多线程" class="headerlink" title="Redis 为什么现在逐渐多线程"></a>Redis 为什么现在逐渐多线程</h3><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730354580754-cf8e49c1-97f3-42f1-b613-fa70c048b921.png"></p>
+<p><strong>如何解决大 Key 删除问题：</strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730354871541-0418c9bf-19d9-4016-b772-2922937f909e.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730355016941-f33333ba-16a6-4cba-87ed-6339cdd8e0bb.png"></p>
+<p><strong>惰性删除：</strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730354921966-55bbbfb9-490a-4b4a-a7de-8cd8e110e0cb.png"></p>
+<p>**Redis6&#x2F;7 之后，网络 IO 部分多线程，执行命令时仍是单线程	**<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730355982263-130a3488-3c8b-4d36-872b-6b6e2ba3c352.png"></p>
+<h3 id="Redis-的-IO-多路复用"><a href="#Redis-的-IO-多路复用" class="headerlink" title="Redis 的 IO 多路复用"></a>Redis 的 IO 多路复用</h3><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730355177508-ab08d858-daf8-409e-8f24-6a3c9885994c.png">多 IO 只是用于处理网络请求<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730355982263-130a3488-3c8b-4d36-872b-6b6e2ba3c352.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730356170072-4e0b85d1-1870-42df-8cc6-723fe88ada56.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730357003077-ad6778b3-91b0-497d-bc23-7ca41ce46ec0.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730357954454-3caae4d1-8581-4140-9e25-b1f3936003de.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730358018490-7ab4a961-68bb-4bfd-ae75-fad788aa98c7.png"></p>
+<p>总结：只使用一个服务端进程可以同时处理多个套接字描述符连接<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730360661569-1e5bc39d-7b98-4860-98cb-5dec32452e79.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730360694880-4d2ca5d1-d246-4550-aac7-62aaff04b211.png"></p>
+<p>开启多线程功能：</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730360801133-8869ab63-68fd-4b52-9e5c-e3d9733d1052.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730360860342-e915b0c4-9b04-4712-a06c-a12ae2522e38.png"></p>
+<h3 id="Redis-插入大量（百万级）数据"><a href="#Redis-插入大量（百万级）数据" class="headerlink" title="Redis 插入大量（百万级）数据"></a>Redis 插入大量（百万级）数据</h3><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730373579632-753e442a-6dff-4ac8-92a7-9f97cc37ed13.png"></p>
+<h3 id="Redis-禁用命令（危险命令禁用）"><a href="#Redis-禁用命令（危险命令禁用）" class="headerlink" title="Redis 禁用命令（危险命令禁用）"></a>Redis 禁用命令（危险命令禁用）</h3><p>通过配置 redis.conf 中的 SECURITY </p>
+<p>将命令替换为空字符串</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730374511793-597e2a25-61f4-414f-887a-0cd3c83cc292.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730374549611-ffb63306-686b-4546-b738-f72f253f5218.png"></p>
+<h3 id="scan-命令，用于迭代数据库中的键（大数据时不能用-key-）"><a href="#scan-命令，用于迭代数据库中的键（大数据时不能用-key-）" class="headerlink" title="scan 命令，用于迭代数据库中的键（大数据时不能用 key*）"></a>scan 命令，用于迭代数据库中的键（大数据时不能用 key*）</h3><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730377173920-7afb43d5-20f0-411e-9c70-7b872cf05f6c.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730377400282-b80263c4-9d80-452c-bcf5-c4a050c1fbc3.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730377427603-7015ed62-542b-43c9-8809-a90cb6ef44b6.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730377878108-eb030143-f298-4bdf-918e-65523eb10d7b.png"></p>
+<p>用 scan 命令时，还是可以用 match k*的<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730377920804-0ea2de02-05bb-49c6-acb2-4363e58b8a07.png"></p>
+<h3 id="BigKey-大键"><a href="#BigKey-大键" class="headerlink" title="BigKey 大键"></a>BigKey 大键</h3><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730379229385-6785f0a0-935d-4724-b586-0bdbafd13fab.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730378540298-6a9bbcd0-dd4f-4a98-b024-2419d3680895.png"><img src="/"></p>
+<h4 id="查看现在数据库中的大-Key：redis-cli-–bigkeys"><a href="#查看现在数据库中的大-Key：redis-cli-–bigkeys" class="headerlink" title="查看现在数据库中的大 Key：redis-cli –bigkeys"></a>查看现在数据库中的大 Key：redis-cli –bigkeys</h4><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730381510673-e98ba476-773d-486f-97aa-4aae7c78986b.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730381464552-57c0ad7c-b281-4839-901d-2054c8fbe246.png"></p>
+<h4 id="计算某个-key-占的字节数"><a href="#计算某个-key-占的字节数" class="headerlink" title="计算某个 key 占的字节数"></a>计算某个 key 占的字节数</h4><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730382322109-969fe3d0-2795-4a09-8a49-849c83ce381f.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730382330921-def109ce-2adf-4f03-b904-ae1b565addba.png"></p>
+<h4 id="大-Key-的删除"><a href="#大-Key-的删除" class="headerlink" title="大 Key 的删除"></a>大 Key 的删除</h4><h5 id="String"><a href="#String" class="headerlink" title="String"></a>String</h5><p>一般用 del 直接删除，不用太考虑大 key 问题，如果过于庞大用 unlink</p>
+<h5 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h5><p>使用 hscan 每次获取少量 field-value，再使用 hdel 删除每个 field</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730429185843-9feae0e7-a326-494f-a8b6-a4e044c0c41e.png"></p>
+<p>阿里手册中对 Hash 大 key 的删除</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730429223023-e36d2961-05b4-49f6-9a1a-0066a7ea6449.png"></p>
+<h5 id="list"><a href="#list" class="headerlink" title="list"></a>list</h5><p>使用 ltrim 渐进式逐步删除，直到全部删除完成</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730431310383-c36f96ad-44de-449d-995e-5d56b484021e.png"></p>
+<h5 id="set"><a href="#set" class="headerlink" title="set"></a>set</h5><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730431340980-7e46899e-25f2-468e-b5ac-50f435046fc0.png"></p>
+<h5 id="zset"><a href="#zset" class="headerlink" title="zset"></a>zset</h5><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730431380602-9ff97e1d-ae40-418d-9b2e-84f010f3095f.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730431643764-5a154714-21dc-47e3-9ac0-d3b683561b24.png"></p>
+<h4 id="大-Key-调优-惰性释放-lazyfree"><a href="#大-Key-调优-惰性释放-lazyfree" class="headerlink" title="大 Key 调优-惰性释放 lazyfree"></a>大 Key 调优-惰性释放 lazyfree</h4><p><font style="color:rgb(17, 17, 17);">惰性删除或延迟释放(Lazy Free),指在删除KEY时，采用异步方式延迟释放EKY所使用的内存，将该操作交给单独的子线程BIO(backgroup I&#x2F;O)进行处理，避免在同步方式删除KEY对Redis主线程的长期占用而影响系统可用性。</font></p>
+<h5 id="主动惰性删除操作"><a href="#主动惰性删除操作" class="headerlink" title="主动惰性删除操作"></a><font style="color:rgb(0, 0, 0);">主动惰性删除操作</font></h5><ul>
+<li><font style="color:rgb(17, 17, 17);">UNLINK命令</font></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">使用UNLINK删除集合键时，会按照集合键的元素去估算释放该KEY的成本，</span><br><span class="line">如果释放成本超过LAZYFREE_THRESHOLD，则会采用Lazy <span class="keyword">Free</span>方式进行处理。</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><font style="color:rgb(17, 17, 17);">FLUSHALL&#x2F;FLUSHDB</font></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过ASYNC选项来设置FLUSHALL操作或FLUSHDB操作是否采用Lazy <span class="keyword">Free</span>方式处理。</span><br></pre></td></tr></table></figure>
+
+<h5 id="被动使用惰性删除，lazy-expire-定期删除，每隔一段时间抽取一批-key-执行删除过期-key"><a href="#被动使用惰性删除，lazy-expire-定期删除，每隔一段时间抽取一批-key-执行删除过期-key" class="headerlink" title="被动使用惰性删除，lazy-expire 定期删除，每隔一段时间抽取一批 key 执行删除过期 key"></a><font style="color:rgb(0, 0, 0);">被动使用惰性删除，lazy-expire 定期删除，每隔一段时间抽取一批 key 执行删除过期 key</font></h5><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730431699085-59c6131d-4d3f-41ed-a260-3efe2f34bfe2.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730431781039-b9b4a5c0-7e19-47f9-bb3f-de76b93aec8b.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730431877599-6919c0f5-4ca6-4fac-9581-e2d9d38f2f41.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730432115734-22e45f98-3b7b-4b1e-9b67-d2a23f5c1695.png"></p>
+<h3 id="MoreKey"><a href="#MoreKey" class="headerlink" title="MoreKey"></a>MoreKey</h3><p>大数据下，使用 key*等命令，会导致卡死<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730374032128-03a969c9-3c7f-49ef-97ec-bf0a5babc300.png"></p>
+<h3 id="缓存双写一致性"><a href="#缓存双写一致性" class="headerlink" title="缓存双写一致性"></a>缓存双写一致性</h3><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730702567537-2ad6ea24-5b27-4605-90c9-4039f13b344d.png"></p>
+<h4 id="双写一致性"><a href="#双写一致性" class="headerlink" title="双写一致性"></a>双写一致性</h4><p>如果 redis 中有数据：需要和数据库中的值相同</p>
+<p>如果 redis 中无数据：数据库中的值要是最新值，且准备回写 redis</p>
+<p>根据缓存类型分：只读缓存、读写缓存</p>
+<p>其中读写缓存</p>
+<ol>
+<li>同步直写策略-立即使用场景<ol>
+<li>写数据库后也同步写 redis 缓存，缓存和数据库中的数据要一致</li>
+<li>对于读写缓存来说，要想保持缓存和数据库数据一致性，就要同步直写</li>
+</ol>
+</li>
+<li>异步缓写策略-不急的业务、异常状态发生后<ol>
+<li>mysql 数据变动后，业务上允许出现一定时间后才作用于 redis、比如仓库、物流系统</li>
+</ol>
+</li>
+</ol>
+<h4 id="双检加锁策略-读"><a href="#双检加锁策略-读" class="headerlink" title="双检加锁策略-读"></a>双检加锁策略-读</h4><p>不完善的、使用读写缓存的 Java 层代码：</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730706307282-4ebf309b-cd9a-43b1-b782-a319d384e5f5.png"></p>
+<p><strong>问题</strong>：当高并发时，一个 redis 中没有的数据都要去 mysql 查询和回写 redis，在这段查和写的时间内，会有大量线程都有这个问题，都去查询和回写，容易被高并发多线程打爆 Mysql，缓存击穿</p>
+<p>解决：<strong>双检加锁</strong></p>
+<p>可以在第一个查询数据的请求上使用一个互斥锁来锁住他，其他线程等待第一个线程拿到数据再做缓存，后面的线程发现已经有缓存了，则直接拿走缓存数据。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730707269821-8aece83f-8e89-41ba-b3c6-42b520b4a510.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730707564613-9623c437-d84f-4530-aed8-cd4a85f124bd.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730707721355-61b0eaca-5e7b-46f5-bd12-6793fa00d26e.png"></p>
+<h4 id="几种写更新策略-先-MySql-还是先-redis，最佳实战：先更新数据库，再删除缓存"><a href="#几种写更新策略-先-MySql-还是先-redis，最佳实战：先更新数据库，再删除缓存" class="headerlink" title="几种写更新策略-先 MySql 还是先 redis，最佳实战：先更新数据库，再删除缓存"></a>几种写更新策略-先 MySql 还是先 redis，最佳实战：先更新数据库，再删除缓存</h4><details class="lake-collapse"><summary id="u1090a799"><span class="ne-text">写操作以数据库为准，所以尽量删除对应更新的缓存数据，而非更新缓存数据</span></summary><p id="u15b73293" class="ne-p"><span class="ne-text"></span></p><p id="u429bf31f" class="ne-p"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730708313324-2ce7cdbe-b593-4614-8b12-7ac96194a47b.png" width="1151" id="u1c5c55af" class="ne-image"></p></details>
+![](https://cdn.nlark.com/yuque/0/2024/png/49293173/1730708395815-0ebb5bdf-6974-48e6-bf18-00914296e2e1.png)
+
+<ol>
+<li>先更新数据库，再更新缓存：问题：<ol>
+<li>回写失败，会使 redis 读脏数据</li>
+<li>高并发时，不同线程更新数据库和更新 redis 可能顺序不一致<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730709116098-65c2b393-cb22-4877-9e93-bd18f1e55e22.png"></li>
+</ol>
+</li>
+<li>先更新缓存，再更新数据库：问题<ol>
+<li>业务上一般以 mysql 为准</li>
+<li>高并发时，不同线程更新数据库和更新 redis 可能顺序不一致<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730709025618-605c7f6d-9739-406b-9799-590c5192c631.png"></li>
+</ol>
+</li>
+<li>先删除缓存，再更新数据库：问题：<ol>
+<li><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730709186373-3a18385e-be97-48d3-a853-0a85d824e6eb.png"></li>
+<li><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730709419025-d9468ad1-3f41-4cf1-827d-034ddfb87556.png"></li>
+<li><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730709428987-e88075b8-c5af-404b-84a8-1a06956d0ee6.png"></li>
+<li><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730709483174-56ed7f4b-7903-447d-9eb0-ef17531c68fa.png"></li>
+<li><font style="color:#DF2A3F;">解决方法 延时双删</font><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730710967336-f0ee310c-e75d-4ea2-803b-33c87fd000a9.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730711001720-aa493465-c9d3-4bf1-b2e0-c8daeb9f1355.png"><ol>
+<li>休眠时间该怎么确定<ol>
+<li>统计平均读数据和写缓存时间，<strong>写数据的休眠时间为读数据业务逻辑的耗时加上百毫秒，这样写请求就可以 确保读请求结束、从而删除读请求造成的缓存脏数据</strong></li>
+<li>启动一个后台监控程序 WatchDog，监控并设定标志位</li>
+</ol>
+</li>
+<li>休眠导致吞吐量降低<ol>
+<li>启用异步线程：A 线程 update 数据库之后启动一个异步线程，这样：不再固定等待多少秒，因为无论等待多少秒都是不能保证百分百有 B 线程不会写回脏数据的！为什么还要异步呢，为什么不直接更新后直接删除呢？因为如果不异步，会有<font style="color:rgb(6, 6, 7);">客户端需要等待删除操作完成才能收到响应。通过异步执行删除操作，客户端可以更快地收到响应，从而提高用户体验，因为数据库更新后，来的新线程要么读到空白数据，要么读到 B 线程回写的脏数据，而且空白数据的可能性更大，因此它会到 sql 中读取最新数据，而这个删除操作只是删除了 “发生概率较小的”B 线程回写数据。</font></li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><font style="color:#DF2A3F;">先更新数据库，再删除缓存-损坏最小、微软云和阿里巴巴用</font></li>
+</ol>
+<p>思想是更新数据库后，删除完缓存后利用新请求读不到数据，去数据库找数据并写回数据，从而更新了缓存</p>
+<p>问题：</p>
+<pre><code>1. A 更新数据库还没删除缓存时，B 读取了缓存中的旧值
+2. 网络问题导致缓存删除失败
+    1. 解决方法：更新数据库时写 binlog 日志，由非业务代码异步删除缓存，如果删除失败则加入消息队列，重新尝试删除![](https://cdn.nlark.com/yuque/0/2024/png/49293173/1730713537466-42f4e32f-cdc7-4b39-80f9-8d6a23e294e8.png)
+</code></pre>
+<p><strong>后两种删除 redis 缓存的策略总结：</strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730713996049-b08b6f60-215a-44aa-8bea-2fb6f1c15539.png"></p>
+<h4 id="无法保证-100-的实时缓存一致性，尤其分布式，只能延时最终一致性"><a href="#无法保证-100-的实时缓存一致性，尤其分布式，只能延时最终一致性" class="headerlink" title="无法保证 100%的实时缓存一致性，尤其分布式，只能延时最终一致性"></a>无法保证 100%的实时缓存一致性，尤其分布式，只能延时最终一致性</h4><p>场景：<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730713724234-6a8f74e9-7a6a-4c9b-acf3-b040d2ab0cf2.png"></p>
+<p>最佳实战：先更新库，后删除缓存。如果必须做到一致性（即读取脏数据也要避免），则只能 reids 缓存先暂停读请求，等缓存删除之后，再启动接收读请求。</p>
+<h4 id="双写一致性的工程落地案例-canal"><a href="#双写一致性的工程落地案例-canal" class="headerlink" title="双写一致性的工程落地案例 -canal"></a>双写一致性的工程落地案例 -canal</h4><p>回顾双写一致性：</p>
+<p>写的时候先更新 mysql、再删除 redis</p>
+<p>读的时候（包括读 redis 空，访问数据库回写）使用双检加锁</p>
+<p>如果 mysql 由记录改动了（增删改写：binlog 记录），如何立刻同步反应到 redis(redis 收到）？</p>
+<p>即** mysql 与 redis 之间的中间件：canal，用于数据库增量日志解析，提供增量数据订阅和消费**</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730720945209-ee32c3ac-ad17-47e0-8400-d87596ff148f.png"></p>
+<h5 id="传统-Mysql-主从复制原理"><a href="#传统-Mysql-主从复制原理" class="headerlink" title="传统 Mysql 主从复制原理"></a>传统 Mysql 主从复制原理</h5><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730721372278-cc880fed-c846-4156-8221-b9bfda8f1491.png"></p>
+<hr>
+<h5 id="canal-工作原理-模拟-MySQL-主从交互协议"><a href="#canal-工作原理-模拟-MySQL-主从交互协议" class="headerlink" title="canal 工作原理-模拟 MySQL 主从交互协议"></a>canal 工作原理-模拟 MySQL 主从交互协议</h5><p>伪装自己为 MySQL slave，向 MySQL master 发送 dump 协议</p>
+<p>MySQL master 收到 dump 请求，开始推送 binary log 给 slave（此时即 canal）</p>
+<p>canal 解析 binary log 对象（byte 流）</p>
+<h5 id="canal-实战用到的时候再搜-注意配置-mysql、canal，更改业务代码"><a href="#canal-实战用到的时候再搜-注意配置-mysql、canal，更改业务代码" class="headerlink" title="canal 实战用到的时候再搜-注意配置 mysql、canal，更改业务代码"></a>canal 实战用到的时候再搜-注意配置 mysql、canal，更改业务代码</h5><h3 id="Redis-做数据库——亿级数据收集清洗统计展现-bigmap-hyperloglog-GEO"><a href="#Redis-做数据库——亿级数据收集清洗统计展现-bigmap-hyperloglog-GEO" class="headerlink" title="Redis 做数据库——亿级数据收集清洗统计展现-bigmap&#x2F;hyperloglog&#x2F;GEO"></a>Redis 做数据库——亿级数据收集清洗统计展现-bigmap&#x2F;hyperloglog&#x2F;GEO</h3><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730773889163-97d0bfbf-5162-4c83-9f51-f46a7cd0c039.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730773900525-de5352b3-d051-4f83-a1d5-cf74246e03fb.png"></p>
+<h4 id="亿级系统中的常见四种统计类型"><a href="#亿级系统中的常见四种统计类型" class="headerlink" title="亿级系统中的常见四种统计类型"></a>亿级系统中的常见四种统计类型</h4><ol>
+<li>聚合统计</li>
+</ol>
+<p><strong>多个集合的聚合结果、交叉并等集合统计</strong><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730774089163-fb187a7e-f9a1-4157-81fe-b05e6529704f.png"></p>
+<p><code>&lt;font style=&quot;color:rgb(6, 6, 7);&quot;&gt;SINTERCARD&lt;/font&gt;</code><font style="color:rgb(6, 6, 7);">它用于计算给定集合的交集的基数（即交集中的元素数量），而不是像 </font><code>&lt;font style=&quot;color:rgb(6, 6, 7);&quot;&gt;SINTER&lt;/font&gt;</code><font style="color:rgb(6, 6, 7);"> 命令那样返回交集的具体元素.如果预计交集的结果集会非常大，而你只需要知道结果集的大小而不是具体元素</font></p>
+<p><font style="color:rgb(6, 6, 7);">应用-共同好友、共同的爱好、可能认识的人</font></p>
+<ol start="2">
+<li>排序统计-zset</li>
+</ol>
+<p><strong>最新评论留言（时间排序、分页展示，如抖音评论）</strong></p>
+<p>可以用 ZSET，尤其面对需要展示最新列表、排行榜等场景，如果数据更新频繁或者分页显示</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730775024346-1f53e57d-7e0b-402b-8445-17776eb76214.png"></p>
+<ol start="3">
+<li>二值统计-bitmap</li>
+</ol>
+<p>集合元素取值只有 0 或者 1。如某个签到打卡场景，只记录有签到 1 或者没签到 0.</p>
+<ol start="4">
+<li>基数统计-hyperloglog</li>
+</ol>
+<p>统计一个集合中不重复的元素个数-新点击量、新用户 UV（unique visitor）</p>
+<h4 id="统计常用术语"><a href="#统计常用术语" class="headerlink" title="统计常用术语"></a>统计常用术语</h4><ol>
+<li>UV（Unique Visitor），独立访客，客户端 IP（或更多考虑），<strong>去重</strong></li>
+<li>PV（Page View）页面浏览量，不用去重</li>
+<li>DAU（Daily Active User）<strong>日活 登录或者使用某个服务的用户数（去重登录用户）</strong></li>
+<li>MAU（Monthly Actice User）<strong>月活 sum、union、</strong></li>
+</ol>
+<h4 id="去重统计-大数据的统计从精确到概率-HyperLogLog（UV）"><a href="#去重统计-大数据的统计从精确到概率-HyperLogLog（UV）" class="headerlink" title="去重统计-大数据的统计从精确到概率 HyperLogLog（UV）"></a>去重统计-大数据的统计从精确到概率 HyperLogLog（UV）</h4><h5 id="去重统计-Java-中-HashSet、redis-中-bitmap-在大数据去重的乏力"><a href="#去重统计-Java-中-HashSet、redis-中-bitmap-在大数据去重的乏力" class="headerlink" title="去重统计-Java 中 HashSet、redis 中 bitmap 在大数据去重的乏力"></a>去重统计-Java 中 HashSet、redis 中 bitmap 在大数据去重的乏力</h5><p>如果数据量上亿或大， bitmap 会有问题，更不用说 JavaHashSet</p>
+<p>bitmap 通过用位 bit 来表示元素是否出现，总内存为 N 个 bit</p>
+<p>新元素标记为 1 只需要按位或即可</p>
+<p>假设一个对象样本： 1 亿数据的基数位值，大约需要 12M </p>
+<p>如果统计有上万个对象样本，则会 120G 因此 bitmaps 不适合太大数据量的基数计数场景</p>
+<p>但是 bitmap 好处是精确</p>
+<h5 id="统计主要用于巨量统计，而不需太精细-概率算法"><a href="#统计主要用于巨量统计，而不需太精细-概率算法" class="headerlink" title="统计主要用于巨量统计，而不需太精细-概率算法"></a>统计主要用于巨量统计，而不需太精细-概率算法</h5><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730775914020-3a95976f-ea87-49bb-a1a4-60c6d0a6df23.png"></p>
+<p>大大加快速度、节省内存</p>
+<h5 id="HyperLogLog-基数统计、概率算法的实现"><a href="#HyperLogLog-基数统计、概率算法的实现" class="headerlink" title="HyperLogLog-基数统计、概率算法的实现"></a>HyperLogLog-基数统计、概率算法的实现</h5><p>去重统计功能的基数估计算法-HyperLogLog</p>
+<p>专做大数据的基数，不存储元素本身。<strong>有误差！</strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730776015138-f2a726c3-aac4-45b2-8af5-08162ad7896b.png"></p>
+<p>命令如下：</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730776087987-efcaae93-7696-4787-883b-1e13047e664c.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730776177940-6205859f-8102-409d-ac1c-d0a1676e6522.png"></p>
+<p><strong>牺牲准确率来换取空间，误差仅仅0.81%左右</strong></p>
+<p><strong>使用 16384 个桶。2 的 64 次方个元素基数。 redis 使用 long 型前 14 位来确定桶的编号，后 50 位用来做基数估计，因此这 50 位可以用 6 个 2 进制比特位来表示桶内下标。所以 16384*6&#x2F;8 &#x3D; 12kB</strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730778048091-89634440-ea7c-4008-8635-2129187902af.png"></p>
+<h5 id="HyperLogLog-落地实践"><a href="#HyperLogLog-落地实践" class="headerlink" title="HyperLogLog 落地实践"></a>HyperLogLog 落地实践</h5><p>需求：</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730777577773-e12b9b3f-accb-4cfb-8802-223e9a5dbc2a.png"></p>
+<p>讨论方案：</p>
+<ol>
+<li>MySQL 绝对不行</li>
+<li>redis 的 hash<ol>
+<li><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730777819861-9b5614cb-41fb-411a-a1a8-2bf7baa87e41.png"></li>
+<li>数据量太大时，存每个 ip 地址占用空间太大</li>
+</ol>
+</li>
+<li>hyperloglog<ol>
+<li>12kB 内存，就可以计算 2 的 64 次方个不同元素的基数</li>
+<li>天生去重</li>
+<li>每来一个 ip，就 pfadd key ip，然后 pfcount 就可以计算数量</li>
+</ol>
+</li>
+</ol>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730778318835-dfad5753-c99d-41a4-b4a0-cdea1f21767d.png"></p>
+<h4 id="状态统计、日活统计、连续签到打卡、一定范围内的活跃用户、一年内的登陆天数-bitmap（日活）"><a href="#状态统计、日活统计、连续签到打卡、一定范围内的活跃用户、一年内的登陆天数-bitmap（日活）" class="headerlink" title="状态统计、日活统计、连续签到打卡、一定范围内的活跃用户、一年内的登陆天数-bitmap（日活）"></a>状态统计、日活统计、连续签到打卡、一定范围内的活跃用户、一年内的登陆天数-bitmap（日活）</h4><p>bitmap 底层使用 String 类型，本质是数组，最大位数 2^ 32 位，512M内存可以存储 42.9 亿字节的信息(2^32)</p>
+<h5 id="京东签到送京豆案例-未完成（等布隆过滤器）"><a href="#京东签到送京豆案例-未完成（等布隆过滤器）" class="headerlink" title="京东签到送京豆案例-未完成（等布隆过滤器）"></a>京东签到送京豆案例-未完成（等布隆过滤器）</h5><h6 id="若-MySQL-存储"><a href="#若-MySQL-存储" class="headerlink" title="若 MySQL 存储"></a>若 MySQL 存储</h6><p>若使用 MySQL 存，每有一个用户签到，则 insert 个语句<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730783161892-5acceede-70af-4596-bc95-b6d80c674a8b.png"></p>
+<p>面对一天 3 千万用户签到，则会很恐怖</p>
+<p>痛点在于：</p>
+<p>一条签到记录对应一条表中记录，占据空间越来越大</p>
+<p>可选思路：一条数据直接存储一个月的签到记录：如一个月 31 天，int32 位，则一位对应一天，一位 0 或 1 代表没来或者来了</p>
+<h6 id="大厂思路-Redis-的-BitMap-存，结合后面布隆过滤器"><a href="#大厂思路-Redis-的-BitMap-存，结合后面布隆过滤器" class="headerlink" title="大厂思路 -Redis 的 BitMap 存，结合后面布隆过滤器"></a>大厂思路 -Redis 的 BitMap 存，结合后面布隆过滤器</h6><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730783660506-f8a35ad9-375d-4644-83d9-bb3c9c6290e3.png"></p>
+<h5 id=""><a href="#" class="headerlink" title=""></a></h5><h3 id="布隆过滤器-BloomFilter"><a href="#布隆过滤器-BloomFilter" class="headerlink" title="布隆过滤器-BloomFilter"></a>布隆过滤器-BloomFilter</h3><h4 id="面试题"><a href="#面试题" class="headerlink" title="面试题"></a>面试题</h4><p>海量全集如何<strong>快速</strong>判断有无某些数据、黑白名单校验</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730784176805-e65c34f4-25fd-4165-afac-ce564222604e.png"></p>
+<h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>布隆过滤器是由<strong>一个初值都为零的 bit 数组和多个哈希函数</strong>构成，用来快速判断集合中是否存在某个元素</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730784829583-ae66df19-885d-44db-bc37-109dcd9676cc.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730785202845-2b84cb0d-da6e-424e-8611-7284ccab51e5.png"></p>
+<p>布隆过滤器是一种类似 set 的数据结构，只是统计结果在巨量数据下不完美</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730786063996-45be15f6-ba11-49ca-9dd7-241215899f4d.png"></p>
+<h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><p>高效地插入和查询，占用空间少，返回结果是不完美的。</p>
+<p>不保存信息，只保存一个是否存在的标记 flag</p>
+<p>判断元素对应的<strong>多个</strong>坑位时使用一系列哈希函数，所以如果元素判断结果存在，可能不是该元素本身，而是与他冲突的或者恰巧其他多个元素和该元素覆盖了相同的位置；但是如果<strong>判断不存在，则该元素一定不存在</strong></p>
+<p><strong>不能删除元素，会把别人的坑位（共享 bit 位）也删了，删除会导致误判率增加。</strong></p>
+<hr>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>布隆过滤器是由<strong>一个初值都为零的 bit 数组和多个哈希函数</strong>构成</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730786583054-ec88a582-a760-4e46-acb0-e5999f3b9ba8.png"></p>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><ol>
+<li>初始化 bitmap（尽量大，一次给够，避免扩容），所有位位 0</li>
+<li>使用多个 Hash 函数对 key 运算，然后对数组长度取模，按照每个 hash 函数的结果的位置置 1<ol>
+<li><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730787847190-47b96d46-9a3d-4bad-b813-c2401079e32d.png"></li>
+</ol>
+</li>
+<li>判断是否存在：将 key 通过相同的多个 hash 函数计算得到多个值，查看值对应的位置是否为 1.如果有一个为 0，说明不存在。如果都为 1，说明极有可能存在</li>
+<li>如果实际元素数量超过了初始化数量，应该重新分配更大的过滤器，对所有历史数据进行重建</li>
+</ol>
+<h4 id="redis-使用-bitmap-实现布隆过滤器，防止缓存穿透"><a href="#redis-使用-bitmap-实现布隆过滤器，防止缓存穿透" class="headerlink" title="redis 使用 bitmap 实现布隆过滤器，防止缓存穿透"></a>redis 使用 bitmap 实现布隆过滤器，防止缓存穿透</h4><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730786948302-50c6e823-1a47-4186-ba24-5bf2b4f905b0.png"></p>
+<p>缓存穿透：缓存没有，数据库<strong>也没有，则每次查询都要访问数据库。</strong></p>
+<p>在 redis 之前再加入一层布隆过滤器。新请求先查找布隆过滤器，如果布隆过滤器中不存在则直接返回（一定无），如果有再去 redis 查询，redis 没有再去 MySQL</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730788326854-a5a2362f-3937-41f5-8234-4379c1d77f50.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730788486763-861c016a-2226-4b04-bbed-0cc5d5f0e05d.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730788509036-bb91f91a-6447-4c47-b748-411c14b39101.png"></p>
+<p>SpringBoot 中新建布隆过滤器类，通过注入 RedisTemplate 完成相应的业务功能</p>
+<h4 id="布谷鸟过滤器-改善布隆过滤器无法删除的问题（尚未大规模使用）"><a href="#布谷鸟过滤器-改善布隆过滤器无法删除的问题（尚未大规模使用）" class="headerlink" title="布谷鸟过滤器- 改善布隆过滤器无法删除的问题（尚未大规模使用）"></a>布谷鸟过滤器- 改善布隆过滤器无法删除的问题（尚未大规模使用）</h4><h3 id="缓存预热"><a href="#缓存预热" class="headerlink" title="缓存预热"></a>缓存预热</h3><p><font style="color:rgb(51, 51, 51);">缓存预热就是系统启动前，提前将相关的缓存数据直接加载到缓存系统。避免在用户请求的时候，先查询数据库，然后再将数据缓存的问题，用户直接查询事先被预热的缓存数据</font></p>
+<p><font style="color:rgb(51, 51, 51);"></font></p>
+<p>小场景： MySQL 有 100 条新增数据，redis 没有，如何同步给 redis（和布隆过滤器）。</p>
+<p>方法：</p>
+<ol>
+<li>什么都不做。只是对 mysql 做新增，利用 redis 回写机制，让他逐步实现 100 条数据的同步。最好部署发布时，由员工提前做一次，让 redis 同步，避免留给用户</li>
+<li>通过中间件或者程序自动完成，如 canal、@PostConstruct、定时任务等。<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730794402656-6947b947-9cdb-4f29-8521-45ca15f48de1.png"></li>
+</ol>
+<p><strong><font style="color:rgb(51, 51, 51);"></font></strong></p>
+<h4 id="问题排查"><a href="#问题排查" class="headerlink" title="问题排查"></a><font style="color:rgb(51, 51, 51);">问题排查</font></h4><ol>
+<li><font style="color:rgb(51, 51, 51);"> 请求数量较高</font></li>
+<li><font style="color:rgb(51, 51, 51);"> 主从之间数据吞吐量较大，数据同步操作频度较高 , 因为刚刚启动时，缓存中没有任何数据</font></li>
+</ol>
+<h3 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h3><p><font style="color:rgb(51, 51, 51);">Redis 崩了。指在同一时段</font><strong><font style="color:rgb(51, 51, 51);">大量的缓存key 同时过期失效</font></strong><font style="color:rgb(51, 51, 51);">或者 </font><strong><font style="color:rgb(51, 51, 51);">Redis服务宕机</font></strong><font style="color:rgb(51, 51, 51);">，导致大量请求到达数据库，带来巨大压力。</font></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730794825692-f7027e30-70fc-4232-815d-d103f15c658f.png"></p>
+<h4 id="解决方案："><a href="#解决方案：" class="headerlink" title="解决方案："></a>解决方案：</h4><ol>
+<li>给不同的Key 的 TTL 添加随机值，过期时间错开，避免大量 key 同时失效</li>
+<li>利用Redis 集群提高服务的可用性，一台挂了其它也可以用、主从哨兵、Cluster、持久化用于恢复 redis</li>
+<li>给缓存业务添加降级限流策略-报错<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730795039805-425d2768-38df-455a-b5a2-8d1e0cd6d71d.png"></li>
+<li>给业务添加多级缓存-ehcache 本地缓存（用户端本地缓存，用户端若有则不用连接服务器）+redis 缓存</li>
+<li>购买云数据库 Redis 版，即买即用<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730795101467-fc527d72-43e8-4446-b4e5-ef1733930315.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730795174011-08f07420-cda6-4c73-9dc3-0931e9c6b9ab.png"></li>
+</ol>
+<h3 id="缓存穿透-两个都无"><a href="#缓存穿透-两个都无" class="headerlink" title="缓存穿透-两个都无"></a>缓存穿透-两个都无</h3><p>布隆过滤器时讲过一点，没深入</p>
+<p>请求查询记录，查 redis 没有，<strong>查 mysql 还是没有</strong>（自然不会回写）。但是同样的请求会每次都去查 mysql，导致压力暴增（即 redis 被穿透）。</p>
+<p>一句话：本来就没有的数据。</p>
+<p>缓存穿透最怕恶意攻击</p>
+<p>解决方案：</p>
+<ol>
+<li>空对象缓存或缺省值，回写增强，这里也可以双检加锁<ol>
+<li><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730795766082-20cd0372-406b-43a3-a935-55de5769a6ca.png"></li>
+<li>这样的 defaultNull 使用随即失效时间，一旦新增就会重新回写，或者缓存预热</li>
+<li>但是这种，如果 key 变了（比如攻击者每次都换一个 key），就无法起作用</li>
+</ol>
+</li>
+<li>布隆过滤器-企业自研或者 Google 开源 Guava<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730795425019-d6652416-fbfd-4a71-bfdd-27a5f32d75c0.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730797436690-57008feb-6e82-4f34-83e6-c4c1ef4d88b9.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730798079507-3fc7e2b5-54b3-43a8-8d44-be59b1830a60.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730798064065-2857b336-70fb-4884-9846-e8e7c59fd2eb.png"></li>
+</ol>
+<h3 id="缓存击穿-两个都先有，后-key-过期"><a href="#缓存击穿-两个都先有，后-key-过期" class="headerlink" title="缓存击穿-两个都先有，后 key 过期"></a>缓存击穿-两个都先有，后 key 过期</h3><p>缓存击穿与缓存穿透毫无关系</p>
+<p>缓存击穿是大量请求查询同一个 key，此时 key 正好失效（时间到了自然清除，刚 delete 掉的 key 刚巧被访问<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730809131384-e76f44ab-2861-4130-b452-5d5e4806ad12.png">），就会导致大量请求都去请求 MySQL</p>
+<p>简单说就是<strong>热点 key</strong> 突然失效，MySQL 扛不住</p>
+<h4 id="预防与解决："><a href="#预防与解决：" class="headerlink" title="预防与解决："></a>预防与解决：</h4><ol>
+<li>对于访问频繁的那些热点 key，干脆就不设置过期时间</li>
+<li>互斥更新：采用双检加锁</li>
+</ol>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1731154048217-0b00e513-3a0e-42a8-b7d7-db046a8b8974.png"></p>
+<ol start="3">
+<li>随即退避</li>
+<li>差异失效时间，开辟两个缓存，主 A 从 B，更新时候先更新 B 再更新 A。查询时先查 A，若 A 失效再查 B<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730809387762-09159f95-ab70-4d33-bd39-1b13cf0fc93b.png"></li>
+</ol>
+<h4 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h4><p>聚划算-页面商品每次进去都更新，显示最新的几个商品</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730807267124-1662af06-f2cf-48d7-80ee-246c542d77fe.png"></p>
+<p>分页显示功能：list</p>
+<p>定时任务：过期时间<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730807674537-494863bc-4d14-4090-9fd9-e04d800dfae9.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730808374619-533c1c95-e27d-4ce3-a26c-6428864491e3.png"></p>
+<h3 id="-1"><a href="#-1" class="headerlink" title=""></a><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1730808662942-42e2f005-3927-429e-9a82-c07cc5b52c35.png"></h3><h3 id="面试补充"><a href="#面试补充" class="headerlink" title="面试补充"></a>面试补充</h3><p><strong>在查询一个 key 的时候，Redis 首先检查该 key 是否存在于过期字典中（时间复杂度为 O(1)），如果不在就直接返回，在的话需要判断一下这个 key 是否过期，过期直接删除 key 然后返回 null</strong></p>
+<p><strong>过期 key 的删除策略，常见 4 种，</strong><font style="color:rgb(60, 60, 67);">Redis 采用的是 </font><strong><font style="color:rgb(60, 60, 67);">定期删除+惰性&#x2F;懒汉式删除</font></strong></p>
+<p><strong><font style="color:rgb(60, 60, 67);">redis 内存淘汰策略：volatile-lru\ttl\radom,allkeys-lru\random,</font></strong></p>
+<p><strong>为什么需要分布式锁？为什么不用 java 的锁？</strong></p>
+<p>因为 java 的 ReentrantLock 和 synchronized 等都是 java 本地锁，都是一个 java 进程里的不同线程之间的锁，而分布式都是不同的 java 进程（多服务，一个服务可能多个）！</p>
+<p><strong>分布式锁要：高可用，要确保锁一定能释放、高性能、非阻塞，获取不到就要停止</strong></p>
+<p><strong>redis 怎么保证多条语句原子性？</strong></p>
+<p><strong>setnx 最简单的锁存在的问题？</strong></p>
+<p>别人执行 del key 就可以删掉锁</p>
+<p><strong><font style="color:rgb(60, 60, 67);">使用 Lua 脚本通过 key 对应的 value（唯一值）来判断</font></strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/49293173/1741527358348-6f72e61d-8db0-4393-94d0-34e8dded4092.png"></p>
+<p><strong><font style="color:rgb(60, 60, 67);">如果释放锁的逻辑挂了，则这个锁永远解锁不了了，过期时间重要性？</font></strong></p>
+<p><font style="color:rgb(60, 60, 67);">所以需要设置过期时间，但是 redis 的 SetNx 设置不了过期时间，过期时间另用 expire 命令，所以非原子</font></p>
+<p>set 命令同时设置 lock 和 ex 和 nx</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/49293173/1741527368260-b0456e87-7bec-47e3-be39-af3e41b3ba2b.png"></p>
+<p><strong><font style="color:rgb(60, 60, 67);">一定要保证设置指定 key 的值和过期时间是一个原子操作</font></strong></p>
+<p><strong>过期时间过长和过短？</strong></p>
+<p><strong>Redisson</strong></p>
+<p>见黑马点评的分布式锁一节<a target="_blank" rel="noopener" href="https://www.yuque.com/heatlow/rhk5yr/ehiah0mvmavtzyf4">Redis实战黑马点评</a></p>
+<p><strong><font style="color:rgb(60, 60, 67);">自动续期？</font></strong></p>
+<p><font style="color:rgb(60, 60, 67);"> Redisson 中的分布式锁自带自动续期机制，使用起来非常简单，原理也比较简单，其提供了一个专门用来监控和续期锁的 </font><font style="color:rgb(60, 60, 67);">Watch Dog（ 看门狗），</font><font style="color:rgb(60, 60, 67);">如果操作共享资源的线程还未执行完成的话，Watch Dog 会不断地延长锁的过期时间（Lua 脚本异步调用 </font><code>&lt;font style=&quot;color:rgb(60, 60, 67);&quot;&gt;renewExpirationAsync()&lt;/font&gt;</code><font style="color:rgb(60, 60, 67);">，保证原子性</font><font style="color:rgb(60, 60, 67);">），进而保证锁不会因为超时而被释放。30+10+10+…</font></p>
+<p><strong><font style="color:#DF2A3F;background-color:#FBDE28;">在不指定更新时间情况下，看门狗逻辑：每 10s 更新一次当前线程 id 对应的锁的过期时间，更新为 30s，无限循环。确保锁不会因为默认 30s 不够、导致业务异常而自动被过期释放。从而导致不安全情况</font></strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1731562652645-2a3a087c-3c35-47a9-8342-b8ed1bcc22f1.png"></p>
+<p><strong><font style="color:rgb(60, 60, 67);">只有未指定锁超时时间，才会使用到 Watch Dog 自动续期机制</font></strong></p>
+<p><strong>集群模式下的分布式锁的可靠性问题？redisson：redlock、看门狗自动续期、唯一标识符防误删、自动重试</strong></p>
+<p><strong>分布式锁一致性问题：</strong></p>
+<p><strong>Rdisson 分布式锁解决主从一致性问题的方法 ：只有在每一个 redis 节点都拿到锁才算成功：</strong><strong><font style="color:#DF2A3F;">MultiLock</font></strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1731565094512-c48c7e97-d5b5-4b93-a45e-a7be59918db4.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1731562736510-bf6a2d5c-5770-4f97-b140-eba6b830d63e.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1731569455655-da4b4899-0c70-4f8a-9f17-94188a456755.png"></p>
+<p><strong>zookeeper？公平锁，可靠性高，watch 机制，但是性能低</strong></p>
+<p><strong>zookeeper 加锁和释放锁步骤简单解释？zookeeper 节点种类？zookeeper 集群宕机时的持久节点会怎样？临时节点与什么绑定？</strong></p>
+<p><strong>zookeeper 事件监听器 watcher？</strong></p>
+<hr>
+<p><strong>Redis 内存碎片产生的原因？</strong></p>
+<ol>
+<li>申请内存时申请的就是多一点的 2.频繁修改也会导致碎片 3. 异步惰性删除等考虑了使用内存池，也就是说删除并不是直接归还给 os，一方面归还需要系统调用大 key 阻塞，另一方面后续还要申请 <font style="color:#DF2A3F;">综合原因：保证性能优先，容忍短暂内存的碎片和占用更多内存</font></li>
+</ol>
+<p><code>mem_fragmentation_ratio</code> （内存碎片率）&#x3D; <code>used_memory_rss</code> (操作系统实际分配给 Redis 的物理内存空间大小)&#x2F; <code>used_memory</code>(Redis 内存分配器为了存储数据实际申请使用的内存空间大小) <font style="color:#DF2A3F;">注意是&#x2F;，不是-</font></p>
+<p><font style="color:#DF2A3F;">可以设置自动清理内存，config set activedefrag true，由参数控制：内存碎片达多少 M 或者内存碎片率达到多少如 1.5 ；同样可以设置内存碎片清理时间：占用 cpu 事件不低于 20 %,不高于%50。重启也可以整理碎片，可以将碎片率过高的主节点降级为从节点，然后安全重启</font></p>
+<p><font style="color:#DF2A3F;"></font></p>
+<p><strong>redis 阻塞原因？命令、RDB 不用 bgsave 而是 save 时 、AOF 可能会阻塞后面后续命令的执行（记录 AOF 是主线程）、AOF 刷盘虽然是后台线程 fsync 但是如果 os 系统调用阻塞了，那么主线程 write 会阻塞、AOF 重写阻塞缓冲区追加到新 AOF 文件（同前面记录 AOF 时主线程一个原因）、大 key 、集群扩容、swap、CPU 竞争、网络</strong></p>
+<p><strong>大部分命令都是 o1，但是一些遍历就是 O(n)，所以要注意大 key 问题</strong></p>
+<p><strong><font style="color:rgb(60, 60, 67);">有遍历的需求可以使用 </font></strong><code>**&lt;font style=&quot;color:rgb(60, 60, 67);&quot;&gt;HSCAN&lt;/font&gt;**</code><strong><font style="color:rgb(60, 60, 67);">、</font></strong><code>**&lt;font style=&quot;color:rgb(60, 60, 67);&quot;&gt;SSCAN&lt;/font&gt;**</code><strong><font style="color:rgb(60, 60, 67);">、</font></strong><code>**&lt;font style=&quot;color:rgb(60, 60, 67);&quot;&gt;ZSCAN&lt;/font&gt;**</code><strong><font style="color:rgb(60, 60, 67);"> 代替</font></strong></p>
+<hr>
+<p><strong>主从复制的作用、</strong>**<font style="color:#DF2A3F;">主从复制会主动删除过期数据吗（主从复制会读取到过期数据吗，主从复制如何避免读取过期数据）</font>**<strong>？？</strong></p>
+<p>如果采用 expire 和 pexpire 设置过期时间，则主从节点如果有延迟 t，那么主节点过期之后的 t 时间内，从节点可能读到过期数据。改进：使用 Expireat 和 pexpireat 使用绝对时间戳标记什么时候过期</p>
+<hr>
+<hr>
+<p><strong><font style="color:#DF2A3F;">Redis 缺点</font></strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/49293173/1741584310089-e72ce647-42a3-45ff-9672-297143fad6fd.png"></p>
+<p><strong>redis 线程模型</strong></p>
+<p><strong><font style="color:rgb(60, 60, 67);">I&#x2F;O 多路复用技术的使用让 Redis 不需要额外创建多余的线程来监听客户端的大量连接，降低了资源的消耗</font></strong><font style="color:rgb(60, 60, 67);">（和 NIO 中的 </font><code>&lt;font style=&quot;color:rgb(60, 60, 67);&quot;&gt;Selector&lt;/font&gt;</code><font style="color:rgb(60, 60, 67);"> 组件很像）</font></p>
+<p><strong><font style="color:rgb(60, 60, 67);">select、poll、epoll?</font></strong></p>
+<p><strong><font style="color:rgb(60, 60, 67);">read 函数的作用，将其功能中的第一步拿出来，然后升级就是 IO 多路复用。</font></strong></p>
+<p><strong><font style="color:rgb(60, 60, 67);">他们都是同步 IO</font></strong></p>
+<p><strong><font style="color:rgb(60, 60, 67);">select 和 poll 都是需要再遍历一遍</font></strong><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">每次调用需将全部</font><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;fd&lt;/font&gt;</code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">从用户态复制到内核态，返回后需遍历所有</font><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;fd&lt;/font&gt;</code><font style="color:rgba(0, 0, 0, 0.9);background-color:rgb(252, 252, 252);">检查就绪状态，时间复杂度为O(n)  ，只是 poll 改用链表，突破了原本 select 最多支持 1024 个 fd</font></p>
+<p><strong><font style="color:rgb(60, 60, 67);">而 epoll 使用红黑树管理 fd，基于回调机制，将就绪的 fd 放到就绪队列中，可以 O1 返回就绪 fd。epoll 有 epollcreate、epollctr、epollwait</font></strong></p>
+<p><strong><font style="color:#DF2A3F;">网卡 解析 MAC 是不是自己→DMA-&gt;内核内存缓冲区-&gt; 内核协议栈 → Socket缓冲区 → epoll 唤醒-&gt;客户端→ Spring Service → Controller&#x2F;REST API</font></strong></p>
+<p><strong><font style="color:rgb(60, 60, 67);"></font></strong></p>
+<p>Redis 节点怎么通信的？</p>
+<details class="lake-collapse"><summary id="u3e785109"><span class="ne-text" style="font-size: 16px">gossip （维护状态）和 Raft（故障转移）？</span></summary><p id="u0dc04184" class="ne-p"><img src="https://cdn.nlark.com/yuque/0/2025/png/49293173/1742370609120-c3c89f24-6154-4f88-aadb-a0ac3b9a4b21.png" width="849" id="uab6308f2" class="ne-image"></p><p id="u115d6a2d" class="ne-p"><img src="https://cdn.nlark.com/yuque/0/2025/png/49293173/1742370621459-9c262ac6-3178-4c71-ab2f-807113ece00e.png" width="841" id="ue277dacb" class="ne-image"><img src="https://cdn.nlark.com/yuque/0/2025/png/49293173/1742370637684-63022bdb-0141-4982-b860-64e855ced1c7.png" width="718" id="uded3b251" class="ne-image"></p></details>
+</div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-sun-o"></i><span class="date">2025-12-12</span><i class="fa fa-tag"></i></div></div></div></div><div class="share"><div class="evernote"><a class="fa fa-bookmark" href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank"></a></div><div class="weibo"><a class="fa fa-weibo" href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));"></a></div><div class="twitter"><a class="fa fa-twitter" target="_blank" rel="noopener" href="http://twitter.com/home?status=,http://example.com/2025/12/12/Redis/,Hide On Bush Blog YJL,Redis学习,;"></a></div></div><div class="pagination"><ul class="clearfix"><li class="pre pagbuttons"><a class="btn" role="navigation" href="/2025/12/12/Blog/" title="Blog网站">Post Anterior</a></li><li class="next pagbuttons"><a class="btn" role="navigation" href="/2025/12/12/Docker/" title="Docker学习">Próximo post</a></li></ul></div></div></div></div></div><script src="/js/jquery.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script></body></html>

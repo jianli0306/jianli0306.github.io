@@ -1,0 +1,216 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author" content="Yin JianLi,2401265@stu.neu.edu.cn"><title>Docker学习 · Hide On Bush Blog YJL</title><meta name="description" content="Docker 和虚拟机的区别
+Docker 的容器(containers)、镜像(images)、仓库(Registry)
+Docker 镜像是一个只读的模板，用来创建容器，容器时 Docker 运行的实例，提供了一个独立的可移植的环境
+Docker 仓库是用来存储 Docker 镜像的地方，最流行"><meta name="keywords" content="生活,Java,机器学习,AI,实习,"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/blog_basic.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"></head><body><div class="sidebar animated fadeInDown"><div class="logo-title"><div class="title"><img src="/images/logo@2x.png" style="width:127px;"><h3 title=""><a href="/">Hide On Bush Blog YJL</a></h3><div class="description"><p>记录个人生活、Java、机器学习、AI项目、实习和其他学习笔记。</p></div></div></div><ul class="social-links"><li><a target="_blank" rel="noopener" href="http://weibo.com/dreamlovei"><i class="fa fa-weibo"></i></a></li><li><a target="_blank" rel="noopener" href="http://github.com/https://github.com/jianli0306"><i class="fa fa-github"></i></a></li></ul><div class="footer"><a target="_blank" href="/"><span>Theme by </span></a><a target="_blank" rel="noopener" href="https://www.caicai.me"> CaiCai </a><span>&</span><a target="_blank" rel="noopener" href="https://github.com/Ben02/hexo-theme-Anatole"> Ben</a><div class="by_farbox"><a href="https://hexo.io/zh-cn/" target="_blank">Proudly published with Hexo&#65281;</a></div></div></div><div class="main"><div class="page-top animated fadeInDown"><div class="nav"><li><a href="/">Home</a></li><li><a href="/about">Sobre</a></li><li><a href="/archives">Arquivo</a></li><li><a href="/links">Links</a></li></div><div class="information"><div class="back_btn"><li><a class="fa fa-chevron-left" onclick="window.history.go(-1)"> </a></li></div><div class="avatar"><img src="/images/favicon.png"></div></div></div><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post animated fadeInDown"><div class="post-title"><h3><a>Docker学习</a></h3></div><div class="post-content"><p>Docker 和虚拟机的区别</p>
+<p>Docker 的容器(containers)、镜像(images)、仓库(Registry)</p>
+<p>Docker 镜像是一个只读的模板，用来创建容器，容器时 Docker 运行的实例，提供了一个独立的可移植的环境</p>
+<p>Docker 仓库是用来存储 Docker 镜像的地方，最流行和常用的仓库就是 Dockerhub（公共的 Docker 仓库），镜像共享和复用</p>
+<p>服务端的 docker daemon 是服务端的 docker 守护进程，客户端和服务端的通信在此。docker daemon 接收到客户端的各种请求后进行处理，将结果返回给客户端</p>
+<p>容器化：将应用程序打包成容器，在容器中运行应用程序</p>
+<p>容器化三个步骤</p>
+<ol>
+<li>创建一个 Dockerfile，来告诉 Docker 构建应用程序镜像的步骤和需要的配置<ol>
+<li>Dockerfile 是一个文本文件，无任何扩展名，包含一条条指令</li>
+<li>包括精简版的操作系统，如 Alpine</li>
+<li>应用程序的运行时环境，如 NodeJS（JavaScript 不在浏览器运行时的环境）、Java、Python</li>
+<li>应用程序，如 SpringBoot 打包好的 jar 包</li>
+<li>应用程序的第三方依赖库或者包</li>
+<li>应用程序的配置文件、环境变量等</li>
+</ol>
+</li>
+<li>使用 Dockerfile 来构建镜像</li>
+<li>使用镜像创建和运行容器</li>
+</ol>
+<h3 id="构建-Docker-镜像的例子：运行-JavaScript-命令"><a href="#构建-Docker-镜像的例子：运行-JavaScript-命令" class="headerlink" title="构建 Docker 镜像的例子：运行 JavaScript 命令"></a>构建 Docker 镜像的例子：运行 JavaScript 命令</h3><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728616033425-79993be3-fb8a-4f6a-81e9-08be007c6dd9.png"></p>
+<ol>
+<li>新建项目（镜像名字），要运行的 index.js 文件到项目根目录</li>
+<li>新建 Dockerfile 文件<ol>
+<li>指定基础镜像，一般会有包含操作系统和运行环境（Step1 和 Step2）</li>
+</ol>
+</li>
+</ol>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">From</span> node:<span class="number">14</span>-alpine</span><br></pre></td></tr></table></figure>
+
+<pre><code>2. 复制文件到容器根目录中 COPY source dest
+</code></pre>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">COPY</span><span class="language-bash"> index.js /indexjs</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>3. 运行应用程序 CMD
+</code></pre>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CMD</span><span class="language-bash"> node /index.js</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>构建镜像</li>
+</ol>
+<p><code>docker build -t hello-docker .</code></p>
+<p>其中 <code>hello-docker</code> 即镜像名，<code>.</code>代表 dockerfile 文件所在的当前目录</p>
+<ol start="4">
+<li>使用<code>docker images</code>或<code>docker image ls</code>来查看我们的镜像</li>
+<li>运行镜像</li>
+</ol>
+<p><code>docker run hello-docker</code></p>
+<ol start="6">
+<li>因为 Dockerfile 文件中有运行应用程序的命令，所以运行镜像后我们的程序运行</li>
+</ol>
+<p>以后可以只传镜像和运行镜像即可。也可以将镜像上传到 DockerHub 或仓库：使用 docker pull 镜像地址</p>
+<h3 id="在网站中运行镜像"><a href="#在网站中运行镜像" class="headerlink" title="在网站中运行镜像"></a>在网站中运行镜像</h3><p>play with docker - 在线 Docker 环境</p>
+<ol>
+<li>docker pull 镜像地址</li>
+<li>docker images</li>
+<li>docker run ***</li>
+</ol>
+<h3 id="逻辑卷"><a href="#逻辑卷" class="headerlink" title="逻辑卷"></a>逻辑卷</h3><p>因为 Docker 是不会持久化的，也就是说每次运行和关闭容器，都会导致数据清除</p>
+<p>逻辑卷可以把容器中的目录或者指定路径映射到宿主机上的某个目录或位置，从而实现数据持久化</p>
+<h3 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h3><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728617774519-5be80520-ccc3-4bbe-bc8a-eb8f21f6cd53.png"></p>
+<p>使用<code>docker-compose.yaml</code>配置文件将互相关联的容器组合在一起</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728617839190-341a8dc2-c0d9-4891-ad34-fbdb5a828e84.png"></p>
+<p>使用<code>docker compose up</code></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1728559831718-e8e000a5-d19a-4707-a3d3-b84e63dd397b.png"></p>
+<h3 id="Docker-下载安装问题"><a href="#Docker-下载安装问题" class="headerlink" title="Docker 下载安装问题"></a>Docker 下载安装问题</h3><p>windows 下需要启动 WSL2、Hyper-V，并且启动乱码：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42892190/article/details/113570354">解决 “Windows 功能” 没有Hyper-V_功能名称 microsoft-hyper-v 未知。 未识别出 windows 功能名称。-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42892190/article/details/113570354">基于WSL2 的 Docker Desktop 启动时 Failed to set version to docker-desktop exit code -1的解决方法-CSDN博客</a></p>
+<p>也就是说 Docker 所有在 windows 里都是运行在了 WSL2 的 Linux 里</p>
+<h3 id="Docker-在-CentOS7-中下载安装"><a href="#Docker-在-CentOS7-中下载安装" class="headerlink" title="Docker 在 CentOS7 中下载安装"></a>Docker 在 CentOS7 中下载安装</h3><h4 id="配置Docker的yum库"><a href="#配置Docker的yum库" class="headerlink" title="配置Docker的yum库"></a>配置Docker的yum库</h4><p>首先要安装一个yum工具</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure>
+
+<p>安装成功后，执行命令，配置Docker的yum源（已更新为阿里云源）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line"></span><br><span class="line">sudo sed -i &#x27;s+download.docker.com+mirrors.aliyun.com/docker-ce+&#x27; /etc/yum.repos.d/docker-ce.repo</span><br></pre></td></tr></table></figure>
+
+<p>更新yum，建立缓存</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum makecache fast</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h4><p>最后，执行命令，安装Docker</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</span><br></pre></td></tr></table></figure>
+
+<h4 id="启动和校验"><a href="#启动和校验" class="headerlink" title="启动和校验"></a>启动和校验</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 启动Docker</span><br><span class="line">systemctl start docker</span><br><span class="line"></span><br><span class="line"># 停止Docker</span><br><span class="line">systemctl stop docker</span><br><span class="line"></span><br><span class="line"># 重启</span><br><span class="line">systemctl restart docker</span><br><span class="line"></span><br><span class="line"># 设置开机自启</span><br><span class="line">systemctl enable docker</span><br><span class="line"></span><br><span class="line"># 执行docker ps命令，如果不报错，说明安装启动成功</span><br><span class="line">docker ps</span><br></pre></td></tr></table></figure>
+
+<h3 id="Docker-镜像加速器-如果遇到尝试拉取官方-docker-并且失败一定要换源，阿里云的已经完蛋了"><a href="#Docker-镜像加速器-如果遇到尝试拉取官方-docker-并且失败一定要换源，阿里云的已经完蛋了" class="headerlink" title="Docker 镜像加速器-如果遇到尝试拉取官方 docker 并且失败一定要换源，阿里云的已经完蛋了"></a>Docker 镜像加速器-<font style="color:#DF2A3F;">如果遇到尝试拉取官方 docker 并且失败一定要换源</font>，阿里云的已经完蛋了</h3><p>阿里云控制台里-点击容器镜像服务-镜像加速器</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Lichen0196/article/details/137355517">docker国内镜像源配置及走代理设置_docker镜像代理-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://xuanyuan.me/blog/archives/1154#_registry_mirror"><strong><font style="color:#DF2A3F;">Docker&#x2F;DockerHub 国内镜像源&#x2F;加速列表（10月10日更新-长期维护） - 轩源的网络日志 - Xuanyuan’s Blog</font></strong></a></p>
+<p>注意要及时换源 <a target="_blank" rel="noopener" href="https://github.com/dongyubin/DockerHub">dongyubin&#x2F;DockerHub: 2024年10月更新，DockerHub国内镜像加速列表，🚀DockerHub镜像加速器 (github.com)</a></p>
+<p><font style="color:#DF2A3F;">docker 重新配置镜像</font></p>
+<p><font style="color:#DF2A3F;">之后重启 docker</font></p>
+<p><code>&lt;font style=&quot;color:#DF2A3F;&quot;&gt;systemctl daemon-reload&lt;/font&gt;</code></p>
+<p><code>&lt;font style=&quot;color:#DF2A3F;&quot;&gt;systemctl restart docker&lt;/font&gt;</code></p>
+<p><font style="color:#DF2A3F;">如果 docker 中有某些镜像或者 compose 要启动：</font></p>
+<p><font style="color:#DF2A3F;">使用 </font><code>&lt;font style=&quot;color:#DF2A3F;&quot;&gt;docker compose up -d&lt;/font&gt;</code><font style="color:#DF2A3F;"> 启动 compose 最好先看一下当前 </font><code>&lt;font style=&quot;color:#DF2A3F;&quot;&gt;docker ps&lt;/font&gt;</code></p>
+<p><font style="color:#DF2A3F;">最后</font><code>&lt;font style=&quot;color:#DF2A3F;&quot;&gt; docker restart nacos_container_id&lt;/font&gt;</code><font style="color:#DF2A3F;">（hmall）</font></p>
+<h3 id="Docker-部署-MySQL"><a href="#Docker-部署-MySQL" class="headerlink" title="Docker 部署 MySQL"></a>Docker 部署 MySQL</h3><p>使用Docker安装 MySQL，仅仅需要一步即可，在命令行输入下面的命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name mysql \</span><br><span class="line">  -p 3306:3306 \</span><br><span class="line">  -e TZ=Asia/Shanghai \</span><br><span class="line">  -e MYSQL_ROOT_PASSWORD=123 \</span><br><span class="line">  mysql</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>解读：</p>
+<ul>
+<li><code>docker run -d</code> ：创建并运行一个容器，<code>-d</code>则是让容器以后台进程运行</li>
+<li><code>--name`` mysql </code> : 给容器起个名字叫<code>mysql</code>，你可以叫别的</li>
+<li><code>-p 3306:3306</code> : 设置端口映射。<ul>
+<li><strong><font style="color:#DF2A3F;">容器是隔离环境</font></strong><font style="color:#DF2A3F;">，外界不可访问。但是可以</font><strong><font style="color:#DF2A3F;">将宿主机端口映射容器内到端口</font></strong><font style="color:#DF2A3F;">，当访问宿主机指定端口时，就是在访问容器内的端口了。</font></li>
+<li>容器内端口往往是由容器内的进程决定，例如MySQL进程默认端口是3306，因此容器内端口一定是3306；而宿主机端口则可以任意指定，一般与容器内保持一致。</li>
+<li>格式： <code>-p 宿主机端口:容器内端口</code>，示例中就是将宿主机的3306映射到容器内的3306端口</li>
+</ul>
+</li>
+<li><code>-``e`` TZ=Asia/Shanghai</code> : 配置容器内进程运行时的一些参数<ul>
+<li>格式：<code>-e KEY=VALUE</code>，KEY和VALUE都由容器内进程决定</li>
+<li>案例中，<code>TZ``=Asia/Shanghai</code>是设置时区；<code>MYSQL_ROOT_PASSWORD=123</code>是设置MySQL默认密码</li>
+</ul>
+</li>
+<li><code>mysql</code> : 设置<strong>镜像</strong>名称，Docker会根据这个名字搜索并下载镜像<ul>
+<li>格式：<code>REPOSITORY:TAG</code>，例如<code>mysql:8.0</code>，其中<code>REPOSITORY</code>可以理解为镜像名，<code>TAG</code>是版本号</li>
+<li>在未指定<code>TAG</code>的情况下，默认是最新版本，也就是<code>mysql:latest</code></li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p>当我们执行命令后，Docker做的第一件事情，是去自动在仓库中搜索并下载了MySQL，然后会自动运行MySQL，我们完全不用插手</p>
+<p>这种安装方式你完全不用考虑运行的操作系统环境，它不仅仅在CentOS系统是这样，在Ubuntu系统、macOS系统、甚至是装了WSL的Windows下，都可以使用这条命令来安装MySQL</p>
+<p>Docker会自动搜索并下载MySQL。注意：这里下载的不是安装包，而是<strong>镜像。</strong>镜像中不仅包含了MySQL本身，还包含了其运行所需要的环境、配置、系统级函数库。因此它在运行时就有自己独立的环境，就可以跨系统运行，也不需要手动再次配置环境了。这套独立运行的隔离环境我们称为<strong>容器</strong></p>
+<h3 id="Docker-基础命令"><a href="#Docker-基础命令" class="headerlink" title="Docker 基础命令"></a>Docker 基础命令</h3><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732274185606-8985a679-5d97-49db-9ce9-8eadcc38ac08.png"></p>
+<p>注意 docker run 是启动并运行一个容器，每次执行这个命令都是启动一个新容器</p>
+<p>而 <code>docker stop</code> 则是停止了容器中的进程，如 mysql 容器中的 mysql 进程，<code>docker start </code>则是启动容器中的进程。在这两个命令中，容器都是一直存在的，停止和启动的都是容器中的进程</p>
+<p><code>docker ps</code> 用来查看 docker 状态（默认只查看运行的容器），<code>docker ps -a</code> 查看运行和停掉的容器</p>
+<p><code>docker exec</code> 可以进入容器内部，因为 docker 容器都是隔离的：<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732274523401-351d3148-623c-4c25-aced-dc0964d41d61.png"></p>
+<p>-it 表示可以交互的进入，bash 表示进入后的交互方式</p>
+<p>如进入 mysql 容器，然后连接 mysql</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732274604852-2d10c06a-784f-4edb-82dd-47c0c6ec3fef.png"></p>
+<p><code>docker inspect 容器名</code>可以查看容器对应的信息</p>
+<p><code>docker rmi</code>删除镜像</p>
+<p><code>docker rm</code> 删除容器</p>
+<p><code>docker rm -f</code> 强制删除容器 （不会删除一些挂载目录之类的信息)</p>
+<h3 id="Docker-数据卷挂载-1-数据卷名"><a href="#Docker-数据卷挂载-1-数据卷名" class="headerlink" title="Docker 数据卷挂载 1-数据卷名"></a>Docker 数据卷挂载 1-数据卷名</h3><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732275069049-ac58bb40-14ca-4d60-aa70-f88ab269fa33.png"></p>
+<p>docker 为每一个容器提供了供该容器运行使用的最小环境（包括一些命令），但是都是最小化的，并不全。比如 nginx 容器内部无 vi 命令。那该怎么完成上面需求？-数据卷</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732275289849-68555988-91e5-4963-a1e6-38210d01f360.png"></p>
+<p>一旦挂载，任何修改都会同步</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732275306447-2d7b2a02-473f-4345-81ab-f36d5c466e17.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732275880942-a0dbd85b-6edd-4b86-9354-e2d46fa1ccfe.png"></p>
+<p>所以不用手动执行 docker volume create</p>
+<h4 id="实战-完成-nginx-修改-index-html"><a href="#实战-完成-nginx-修改-index-html" class="headerlink" title="实战-完成 nginx 修改 index.html"></a>实战-完成 nginx 修改 index.html</h4><p>创建 nginx 容器并完成数据卷挂载</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732276131595-7d36b65c-be24-41c9-a65c-f4bae229be93.png"></p>
+<p>查看挂载到的宿主机目录</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732276274857-ca031531-61db-44d1-ab15-5a01e16d44ec.png"></p>
+<p>查看该目录下的内容：可以发现就是原本 nginx 挂载的目录文件</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732276314455-674d1be4-0644-4583-810e-bf4b90a7ab0b.png"></p>
+<p>在外部访问 centos 的 docker 的 nginx</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732276425680-7a36e184-8eed-444f-be2f-234f5f6d15b4.png"></p>
+<p>使用 xftp7 直接对宿主机目录文件进行修改就能实现对 docker 内部 nginx 的挂载目录文件的修改：</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732276533086-aef6721e-d8a6-4388-85fb-0c492a72b297.png"></p>
+<p>同时，我们以后也不用使用 docker exec -it nginx bash 这种命令进入容器内部了</p>
+<h3 id="Docker-数据卷挂载-2-本地目录"><a href="#Docker-数据卷挂载-2-本地目录" class="headerlink" title="Docker 数据卷挂载 2-本地目录"></a>Docker 数据卷挂载 2-本地目录</h3><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732276724251-f309618d-09d7-471c-8e43-fed2b33ab33f.png"></p>
+<p>mysql 容器在创建时会自动创建数据卷和挂载-<strong>匿名卷</strong></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732277176197-fb804f13-7cfd-4a7d-ba40-3e2a878e7cd7.png"></p>
+<p>这个数据卷就是 mysql 数据存储的地方，为了以后数据迁移方便</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732277553682-5a817e1b-1737-4d58-ad84-f6198ce57548.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732277587885-26ae1dbf-e999-42a3-810a-68f89ec5ffd9.png"></p>
+<h3 id="Docker-自定义镜像-dockerfile"><a href="#Docker-自定义镜像-dockerfile" class="headerlink" title="Docker 自定义镜像-dockerfile"></a>Docker 自定义镜像-dockerfile</h3><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732416694192-ee350329-35f9-486e-8256-d3019c053900.png"></p>
+<p>上层可以共享下层</p>
+<p>只需要描述好镜像结构，docker 就可以构建镜像</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732417096319-d0cd3297-3f50-4d79-874b-31275541bb7b.png"></p>
+<p>copy 将文件或者压缩包拷贝到镜像中， run 完成一些解压缩的 shell 命令</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732417396671-2420f698-ba40-40b1-b2dc-cb737d630fae.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732417614918-d3a6af89-0b1a-4e41-9487-8febdbbaaf0c.png"></p>
+<h3 id="Docker-网络"><a href="#Docker-网络" class="headerlink" title="Docker 网络"></a>Docker 网络</h3><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732418762173-6b3f15e6-c81b-4e37-9974-b97c6687bb2b.png"><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732418797103-cb1ff4a1-b908-4d40-b62e-67ae49bdfdb6.png"></p>
+<h3 id="Docker-部署-java-项目-hmall"><a href="#Docker-部署-java-项目-hmall" class="headerlink" title="Docker 部署 java 项目-hmall"></a><font style="color:#DF2A3F;">Docker 部署 java 项目-hmall</font></h3><p><strong>注意容器名改为 hmall 了</strong></p>
+<ol>
+<li>idea 将 java 代码 hm-service 使用 maven pakage 打包，生成 target-jar 包</li>
+</ol>
+<p>在 hm-service 目录即 target 所在目录 有提前写好的 dockerfile：</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732428606388-958fc860-b13f-49e4-a6cc-836fc2622812.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732429078803-1d0a567a-d74e-46e0-b985-ea85ad9064c4.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732428647791-a3dd3e39-514e-4a89-a404-cc18dab2f8b8.png"></p>
+<ol start="2">
+<li>将 jar包与 dockerfile 同时放入 linux 中</li>
+<li>使用<code> docker build -t hmall .</code>使用.(当前目录)下的 dockerfile 构建 hmall 镜像，-t 代表版本标签，这里不加东西表示默认 latest 标签</li>
+<li>之后就可以使用 <code>docker images</code>查看到所有镜像中新加了 hmall 镜像</li>
+<li>之后使用<code> docker run -d --name hm -p 8080:8080 --network heima hmall</code>，启动一个 名字为 hm 的 hmall 容器，并加入到 heima 的 network 网络中。-d 表示后台启动。这时候，容器就启动了，这个容器自动使用了 dockerfile 中的 entrypoint 的命令：<code>java -jar /app.jar</code>运行了 jar 包，即启动了 SpringBoot</li>
+<li>使用 docker log -f hm 查看容器的日志：<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732429711689-18dd55ff-774a-4b37-bdd3-d43e858eb100.png"></li>
+<li>在 linux 外的环境，使用浏览器访问这个 Spring<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732429816458-74e2cf3a-294a-484e-a82e-766cbd313907.png"></li>
+<li>将前面的 mysql 也加入到 heima 的 network 中，这样 spring 应用就可以连接到数据库了（前提：将数据库内容准备好，在”Docker 数据卷挂载 2-本地目录“一章，然后 mysql 容器加入 heima 的 network 网络）</li>
+<li>在访问相应的页面就可以得到数据库的内容<img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732431123311-59bf2cb0-c6a0-4785-b57b-f241944e1fc4.png"></li>
+</ol>
+<h3 id="Docker-部署前端-nginx"><a href="#Docker-部署前端-nginx" class="headerlink" title="Docker 部署前端-nginx"></a>Docker 部署前端-nginx</h3><p>因为都部署到一个 docker 网络中，所以 nginx 与 java 也可以使用容器名互联：</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732432140607-0f372815-0e22-4882-a143-e38ba5059788.png"></p>
+<p>nginx 也同理，使用 docker 容器，同时进行挂载 html 目录和 nginx.conf 配置文件</p>
+<p>创建nginx容器并完成两个挂载：</p>
+<ul>
+<li>把<code>/root/nginx/nginx.conf</code>挂载到<code>/etc/nginx/ng``inx.conf</code></li>
+<li>把<code>/root/nginx/html</code>挂载到<code>/usr/share/nginx/html</code></li>
+</ul>
+<p>由于需要让nginx同时代理hmall-portal和hmall-admin两套前端资源，因此我们需要暴露两个端口：</p>
+<ul>
+<li>18080：对应hmall-portal</li>
+<li>18081：对应hmall-admin</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name nginx \</span><br><span class="line">  -p 18080:18080 \</span><br><span class="line">  -p 18081:18081 \</span><br><span class="line">  -v /root/nginx/html:/usr/share/nginx/html \</span><br><span class="line">  -v /root/nginx/nginx.conf:/etc/nginx/nginx.conf \</span><br><span class="line">  --network heima \</span><br><span class="line">  nginx</span><br></pre></td></tr></table></figure>
+
+<p>测试，通过浏览器访问：http:&#x2F;&#x2F;虚拟机ip:18080</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732433412949-aafe08ea-144c-417b-a237-c68c4f704434.png"></p>
+<h3 id="DockerCompose"><a href="#DockerCompose" class="headerlink" title="DockerCompose"></a>DockerCompose</h3><p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732434090194-11388985-b27d-4d84-ab12-335502ef73d1.png"></p>
+<p>docker-compose.yml 的描述信息和 docker run 命令相关内容基本一样</p>
+<p>以下是整个项目的 docker-compose.yml 文件：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&quot;3.8&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">mysql:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">mysql</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">mysql</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;3306:3306&quot;</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">TZ:</span> <span class="string">Asia/Shanghai</span></span><br><span class="line">      <span class="attr">MYSQL_ROOT_PASSWORD:</span> <span class="number">123</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;./mysql/conf:/etc/mysql/conf.d&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;./mysql/data:/var/lib/mysql&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;./mysql/init:/docker-entrypoint-initdb.d&quot;</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">hm-net</span></span><br><span class="line">  <span class="attr">hmall:</span></span><br><span class="line">    <span class="attr">build:</span> </span><br><span class="line">      <span class="attr">context:</span> <span class="string">.</span></span><br><span class="line">      <span class="attr">dockerfile:</span> <span class="string">Dockerfile</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">hmall</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8080:8080&quot;</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">hm-net</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">mysql</span></span><br><span class="line">  <span class="attr">nginx:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;18080:18080&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;18081:18081&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;./nginx/nginx.conf:/etc/nginx/nginx.conf&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;./nginx/html:/usr/share/nginx/html&quot;</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">hmall</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">hm-net</span></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">hm-net:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">hmall</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：java 应用没有写 image，而是写了 build，根据 dockerfile 手动构建镜像</p>
+<p>depends_on 可以写也可以不写，写的原因是因为 java 里用到了 mysql，nginx 则用到了 java 项目。docke-compose 会根据这个调整构建先后关系</p>
+<p>最后的 networks 是手动声明一个网络 ，docker-compose 会根据这个创建网络，<font style="color:rgb(77, 77, 77);">hm-net 是一个网络的标识符，用于在 Docker Compose 文件中引用和管理这个网络；这个标识符是局部的，仅在当前 Docker Compose 文件中有效。</font><br><font style="color:rgb(77, 77, 77);">name: hmall 是这个网络在 Docker</font></p>
+<p><font style="color:rgb(77, 77, 77);"></font></p>
+<p>根据 yml 文件执行 docker compose <font style="color:#DF2A3F;"> 建议最后-d 后台运行</font></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732434769383-65791136-bdb1-4725-bf39-eb3dcf02fb49.png"></p>
+<p>测试</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/49293173/1732435430454-4abd0832-c85f-4c8e-90d5-952f50d9f4e3.png"></p>
+</div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-sun-o"></i><span class="date">2025-12-12</span><i class="fa fa-tag"></i></div></div></div></div><div class="share"><div class="evernote"><a class="fa fa-bookmark" href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank"></a></div><div class="weibo"><a class="fa fa-weibo" href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));"></a></div><div class="twitter"><a class="fa fa-twitter" target="_blank" rel="noopener" href="http://twitter.com/home?status=,http://example.com/2025/12/12/Docker/,Hide On Bush Blog YJL,Docker学习,;"></a></div></div><div class="pagination"><ul class="clearfix"><li class="pre pagbuttons"><a class="btn" role="navigation" href="/2025/12/12/Redis/" title="Redis学习">Post Anterior</a></li><li class="next pagbuttons"><a class="btn" role="navigation" href="/2025/12/12/SpringMVC/" title="SpringMVC学习">Próximo post</a></li></ul></div></div></div></div></div><script src="/js/jquery.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script></body></html>
